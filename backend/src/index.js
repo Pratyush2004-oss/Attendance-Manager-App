@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.route.js';
 import batchRoutes from './routes/batchs.route.js';
 import attendanceRoute from './routes/attendance.router.js';
 import organizationRoute from "./routes/organization.route.js";
+import assignmentRoute from "./routes/assignment.routes.js";
 import { AutomateDeleteUser } from './service/automateDeleteUser.js';
 
 const app = express();
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/batch', batchRoutes);
 app.use('/api/attendance', attendanceRoute);
 app.use('/api/organization', organizationRoute);
+app.use('/api/assignment', assignmentRoute);
 
 app.use((err, req, res, next) => {
     console.error("Unhandled error: ", err);

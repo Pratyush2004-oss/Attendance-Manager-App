@@ -310,7 +310,7 @@ export const checkAdmin = expressAsyncHandler(async (req, res, next) => {
         if (!user) {
             return res.status(401).json({ message: "Unauthorized, user not found" });
         }
-        res.status(200).json({ message: "Admin Authorized" });
+        res.status(200).json({ message: "Admin Authorized", isAdmin: true });
     } catch (error) {
         console.log("Error in check-admin controller : " + error);
         next(error);

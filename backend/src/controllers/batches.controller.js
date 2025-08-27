@@ -88,7 +88,7 @@ export const createBatch = expressasyncHandler(async (req, res, next) => {
         if (batch.length > 0) {
             return res.status(400).json({ message: "Batch name already exists" });
         }
-        const batchJoiningCode = Math.floor(1000 + Math.random() * 9000);
+        const batchJoiningCode = Math.floor(100000 + Math.random() * 900000);
         const newBatch = await BatchModel.create({
             name,
             teacherId: user._id,
