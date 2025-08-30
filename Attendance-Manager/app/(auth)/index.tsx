@@ -13,6 +13,10 @@ import { useRouter } from "expo-router";
 const Login = () => {
   const router = useRouter();
   const [showPassword, setshowPassword] = useState(false);
+
+  const handleLogin = () => {
+    router.push("/(studentTab)");
+  };
   return (
     <KeyboardAvoidingView
       className="items-center justify-between flex-1 bg-gray-300"
@@ -67,7 +71,10 @@ const Login = () => {
                   />
                 </Pressable>
               </View>
-              <TouchableOpacity className="w-full px-3 py-2 rounded-md bg-blue-900/70">
+              <TouchableOpacity
+                className="w-full px-3 py-2 rounded-md bg-blue-900/70"
+                onPress={handleLogin}
+              >
                 <Text className="text-2xl text-center text-white">Login</Text>
               </TouchableOpacity>
             </View>

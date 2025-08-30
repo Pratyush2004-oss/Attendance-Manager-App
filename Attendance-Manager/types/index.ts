@@ -7,8 +7,12 @@ export type signupInputType = {
   name: string;
   email: string;
   password: string;
-  role: "student" | "teacher" |"";
+  role: "student" | "teacher" | "";
   Organization: string[];
+  guardian: {
+    name: string;
+    number: string;
+  };
 };
 
 export type verifyEmailInputType = {

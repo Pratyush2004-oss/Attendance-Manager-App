@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   Pressable,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -21,6 +22,10 @@ const Signup = () => {
     Organization: [""],
     password: "",
     role: "",
+    guardian: {
+      name: "",
+      number: "",
+    },
   });
   return (
     <KeyboardAvoidingView
@@ -34,8 +39,12 @@ const Signup = () => {
           <AuthHeader />
           {/* Signup form */}
 
-          <View className="items-center justify-center w-full">
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            className="flex-1 w-full pb-5"
+          >
             <View className="w-full gap-5">
+              {/* Name */}
               <View className="w-full gap-2">
                 <Text className="ml-3 text-xl font-bold text-white">Name</Text>
                 <TextInput
@@ -43,6 +52,7 @@ const Signup = () => {
                   className="w-full px-3 py-2 text-xl bg-white rounded-md"
                 />
               </View>
+              {/* Email */}
               <View className="w-full gap-2">
                 <Text className="ml-3 text-xl font-bold text-white">Email</Text>
                 <TextInput
@@ -52,6 +62,7 @@ const Signup = () => {
                   autoCapitalize="none"
                 />
               </View>
+              {/* Password */}
               <View className="relative w-full gap-2">
                 <Text className="ml-3 text-xl font-bold text-white">
                   Password
@@ -63,7 +74,7 @@ const Signup = () => {
                 />
                 <Pressable
                   className="absolute -translate-y-1/2 right-3 top-3/4"
-                  onPress={() => setshowPassword  (!showPassword)}
+                  onPress={() => setshowPassword(!showPassword)}
                 >
                   <Ionicons
                     name={showPassword ? "eye-outline" : "eye-off-outline"}
@@ -72,80 +83,80 @@ const Signup = () => {
                   />
                 </Pressable>
               </View>
-
-              {/* Add the following code to your JSX */}
-              <View className="flex-row w-full gap-2">
-                <View className="flex-row items-center gap-2">
-                  <Text className="ml-3 text-xl font-bold text-white">
-                    Role:
-                  </Text>
-                  <View className="">
-                    <TouchableOpacity
-                      className="flex-row gap-2 mr-3"
-                      onPress={() => {
-                        if (input.role === "student")
-                          setInput({ ...input, role: "" });
-                        else setInput({ ...input, role: "student" });
-                      }}
-                    >
-                      {input.role === "student" ? (
-                        <View className="ml-2">
-                          <Ionicons
-                            name="checkmark-circle"
-                            size={20}
-                            color="#fff"
-                          />
-                        </View>
-                      ) : (
-                        <View className="ml-2">
-                          <Ionicons
-                            name="checkmark-circle-outline"
-                            size={20}
-                            color="#fff"
-                          />
-                        </View>
-                      )}
-                      <Text className="text-xl font-bold text-white">
-                        Student
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      className="flex-row gap-2 mr-3"
-                      onPress={() => {
-                        if (input.role === "teacher")
-                          setInput({ ...input, role: "" });
-                        else setInput({ ...input, role: "teacher" });
-                      }}
-                    >
-                      {input.role === "teacher" ? (
-                        <View className="ml-2">
-                          <Ionicons
-                            name="checkmark-circle"
-                            size={20}
-                            color="#fff"
-                          />
-                        </View>
-                      ) : (
-                        <View className="ml-2">
-                          <Ionicons
-                            name="checkmark-circle-outline"
-                            size={20}
-                            color="#fff"
-                          />
-                        </View>
-                      )}
-                      <Text className="text-xl font-bold text-white">
-                        Teacher
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+              {/* Role */}
+              <View className="flex-row items-center justify-between w-full gap-2 ">
+                <Text className="ml-3 text-xl font-bold text-white">Role</Text>
+                {/* group */}
+                <View className="flex-row rounded-md">
+                  {/* Student */}
+                  <TouchableOpacity
+                    className="flex-row gap-2 mr-3"
+                    onPress={() => {
+                      if (input.role === "student")
+                        setInput({ ...input, role: "" });
+                      else setInput({ ...input, role: "student" });
+                    }}
+                  >
+                    {input.role === "student" ? (
+                      <View className="ml-2">
+                        <Ionicons
+                          name="checkmark-circle"
+                          size={20}
+                          color="#fff"
+                        />
+                      </View>
+                    ) : (
+                      <View className="ml-2">
+                        <Ionicons
+                          name="checkmark-circle-outline"
+                          size={20}
+                          color="#fff"
+                        />
+                      </View>
+                    )}
+                    <Text className="text-xl font-bold text-white">
+                      Student
+                    </Text>
+                  </TouchableOpacity>
+                  {/* teacher */}
+                  <TouchableOpacity
+                    className="flex-row gap-2 mr-3"
+                    onPress={() => {
+                      if (input.role === "teacher")
+                        setInput({ ...input, role: "" });
+                      else setInput({ ...input, role: "teacher" });
+                    }}
+                  >
+                    {input.role === "teacher" ? (
+                      <View className="ml-2">
+                        <Ionicons
+                          name="checkmark-circle"
+                          size={20}
+                          color="#fff"
+                        />
+                      </View>
+                    ) : (
+                      <View className="ml-2">
+                        <Ionicons
+                          name="checkmark-circle-outline"
+                          size={20}
+                          color="#fff"
+                        />
+                      </View>
+                    )}
+                    <Text className="text-xl font-bold text-white">
+                      Teacher
+                    </Text>
+                  </TouchableOpacity>
                 </View>
-                <View className="flex-1">
-                  <Text className="ml-3 text-xl font-bold text-white">
-                    Organization:
-                  </Text>
+              </View>
+              {/* Organization */}
+              <View className="w-full gap-2">
+                <Text className="ml-3 text-xl font-bold text-white">
+                  Organization:
+                </Text>
+                <View className="w-full bg-white rounded-lg">
                   <Picker
-                    className="px-3 py-2 text-xl bg-white rounded-md "
                     selectedValue={""}
                     onValueChange={(itemValue) =>
                       setInput({ ...input, Organization: [itemValue] })
@@ -167,27 +178,42 @@ const Signup = () => {
                   </Picker>
                 </View>
               </View>
+              {/* Guardian Info for student only */}
+              {input.role === "student" && (
+                <View className="w-full gap-2">
+                  {/* Guardian Name */}
+                  <View className="w-full gap-2">
+                    <Text className="ml-3 text-xl font-bold text-white">
+                      Guardian Name
+                    </Text>
+                    <TextInput
+                      placeholder="John Doe"
+                      className="w-full px-3 py-2 text-xl bg-white rounded-md"
+                    />
+                  </View>
+
+                  {/* Guardian Mobile Number */}
+                  <View className="w-full gap-2">
+                    <Text className="ml-3 text-xl font-bold text-white">
+                      Guardian Mobile Number
+                    </Text>
+                    <TextInput
+                      placeholder="+91 1234567890"
+                      className="w-full px-3 py-2 text-xl bg-white rounded-md"
+                      keyboardType="phone-pad"
+                    />
+                  </View>
+                </View>
+              )}
+              {/* Signup button */}
               <TouchableOpacity className="w-full px-3 py-2 rounded-md bg-blue-900/70">
                 <Text className="text-2xl text-center text-white">Signup</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </ScrollView>
 
-          {/* Footer for Signup */}
+          {/* Footer for Login button */}
           <View className="w-full ">
-            <View className="items-center justify-center w-full my-2 ">
-              <Text className="text-lg text-center text-white">
-                Already have an account but not verified
-              </Text>
-              <Pressable
-                className="w-1/2"
-                onPress={() => router.push("/(auth)/verifyEmail")}
-              >
-                <Text className="text-lg text-center text-blue-700">
-                  Verify Account
-                </Text>
-              </Pressable>
-            </View>
             <View className="flex-row items-center justify-center w-full gap-2 py-2 border-t-2 border-white">
               <Text className="text-xl text-white">
                 Already have an account?
