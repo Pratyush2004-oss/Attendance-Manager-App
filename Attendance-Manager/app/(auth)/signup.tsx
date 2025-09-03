@@ -1,9 +1,13 @@
 import AuthHeader from "@/components/auth/AuthHeader";
-import { signupInputType } from "@/types";
-import { Ionicons } from "@expo/vector-icons";
+import useOrganizationHook from "@/hooks/useOrganizationHook";
+import { useUserStore } from "@/store/userStore";
+import { OrganizationType, signupInputType } from "@/types";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  FlatList,
   KeyboardAvoidingView,
   Pressable,
   ScrollView,
@@ -12,14 +16,17 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 const Signup = () => {
   const router = useRouter();
   const [showPassword, setshowPassword] = useState(false);
+  const [OrganizationList, setOrganizationList] = useState<OrganizationType[]>(
+    []
+  );
+  const { getOrganizationList } = useOrganizationHook();
   const [input, setInput] = useState<signupInputType>({
     email: "",
     name: "",
-    Organization: [""],
+    Organization: [],
     password: "",
     role: "",
     guardian: {
@@ -27,6 +34,48 @@ const Signup = () => {
       number: "",
     },
   });
+
+  const { signup } = useUserStore();
+  useEffect(() => {
+    const fetchOrganizationList = async () => {
+      const organizationList = await getOrganizationList();
+      setOrganizationList(organizationList);
+    };
+    fetchOrganizationList();
+  }, []);
+
+  const handleSelectOrganization = (inputValue: string) => {
+    if (input.Organization.includes(inputValue)) {
+      return;
+    }
+    setInput((prevInput) => ({
+      ...prevInput,
+      Organization: [...prevInput.Organization, inputValue],
+    }));
+  };
+
+  const handleRemoveOrganization = (inputValue: string) => {
+    setInput((prevInput) => ({
+      ...prevInput,
+      Organization: prevInput.Organization.filter(
+        (organization) => organization !== inputValue
+      ),
+    }));
+  };
+
+  const filteredOrganization = () => {
+    return OrganizationList.filter((org) =>
+      input.Organization.includes(org._id)
+    );
+  };
+
+  // Handle form submission
+  const handleSignup = async () => {
+    const response = await signup(input);
+    if (response) {
+      router.push("/(auth)");
+    }
+  };
   return (
     <KeyboardAvoidingView
       className="items-center justify-between flex-1 bg-gray-300"
@@ -38,18 +87,19 @@ const Signup = () => {
           {/* Header */}
           <AuthHeader />
           {/* Signup form */}
-
           <ScrollView
             showsVerticalScrollIndicator={false}
             className="flex-1 w-full pb-5"
           >
-            <View className="w-full gap-5">
+            <View className="w-full gap-5 pb-5">
               {/* Name */}
               <View className="w-full gap-2">
                 <Text className="ml-3 text-xl font-bold text-white">Name</Text>
                 <TextInput
                   placeholder="John Doe"
                   className="w-full px-3 py-2 text-xl bg-white rounded-md"
+                  value={input.name}
+                  onChangeText={(text) => setInput({ ...input, name: text })}
                 />
               </View>
               {/* Email */}
@@ -60,6 +110,8 @@ const Signup = () => {
                   className="w-full px-3 py-2 text-xl bg-white rounded-md"
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  value={input.email}
+                  onChangeText={(text) => setInput({ ...input, email: text })}
                 />
               </View>
               {/* Password */}
@@ -71,6 +123,10 @@ const Signup = () => {
                   secureTextEntry={!showPassword}
                   placeholder="Password"
                   className="w-full px-3 py-2 text-xl bg-white rounded-md"
+                  value={input.password}
+                  onChangeText={(text) =>
+                    setInput({ ...input, password: text })
+                  }
                 />
                 <Pressable
                   className="absolute -translate-y-1/2 right-3 top-3/4"
@@ -151,33 +207,54 @@ const Signup = () => {
                 </View>
               </View>
               {/* Organization */}
-              <View className="w-full gap-2">
-                <Text className="ml-3 text-xl font-bold text-white">
-                  Organization:
-                </Text>
-                <View className="w-full bg-white rounded-lg">
-                  <Picker
-                    selectedValue={""}
-                    onValueChange={(itemValue) =>
-                      setInput({ ...input, Organization: [itemValue] })
-                    }
-                  >
-                    <Picker.Item label="Select Organization" value="" />
-                    <Picker.Item
-                      label="Organization 1"
-                      value="Organization 1"
-                    />
-                    <Picker.Item
-                      label="Organization 2"
-                      value="Organization 2"
-                    />
-                    <Picker.Item
-                      label="Organization 3"
-                      value="Organization 3"
-                    />
-                  </Picker>
+              {OrganizationList && OrganizationList.length > 0 && (
+                <View className="w-full gap-2">
+                  <Text className="ml-3 text-xl font-bold text-white">
+                    Organization:
+                  </Text>
+                  <View className="w-full bg-white rounded-lg">
+                    <Picker
+                      selectedValue={""}
+                      onValueChange={(itemValue) =>
+                        handleSelectOrganization(itemValue)
+                      }
+                    >
+                      <Picker.Item label="Select Organization" value="" />
+                      {OrganizationList.map((organization) => (
+                        <Picker.Item
+                          key={organization._id}
+                          label={organization.name}
+                          value={organization._id}
+                        />
+                      ))}
+                    </Picker>
+                  </View>
                 </View>
-              </View>
+              )}
+              {/* map name of all the selected organization */}
+              <FlatList
+                horizontal
+                className="w-full gap-2 py-2 mt-2 overflow-auto rounded-lg"
+                data={filteredOrganization()}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <View className="relative px-3 py-2 mt-1 bg-gray-200 rounded-full">
+                    <Pressable className="absolute bg-red-500 rounded-full -right-2 -top-2">
+                      <MaterialIcons
+                        name="close"
+                        size={15}
+                        color="white"
+                        className="p-0.5 text-white rounded-full"
+                        onPress={() => handleRemoveOrganization(item._id)}
+                      />
+                    </Pressable>
+
+                    <Text className="font-medium">{item.name}</Text>
+                  </View>
+                )}
+                keyExtractor={(item) => item._id}
+              />
+
               {/* Guardian Info for student only */}
               {input.role === "student" && (
                 <View className="w-full gap-2">
@@ -206,7 +283,10 @@ const Signup = () => {
                 </View>
               )}
               {/* Signup button */}
-              <TouchableOpacity className="w-full px-3 py-2 rounded-md bg-blue-900/70">
+              <TouchableOpacity
+                className="w-full px-3 py-2 rounded-md bg-blue-900/70"
+                onPress={handleSignup}
+              >
                 <Text className="text-2xl text-center text-white">Signup</Text>
               </TouchableOpacity>
             </View>

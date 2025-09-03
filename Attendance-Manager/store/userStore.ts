@@ -67,16 +67,14 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
       }
 
       const response = await axios.post(UserApis.registerUser, userInput);
-      if (response.status === 400) throw new Error(response.data.message);
+      if (response.status === 400) throw new Error(response.data.error);
 
       Alert.alert("Success", response.data.message);
       return true;
     } catch (error: any) {
-      if (error instanceof Error) {
-        Alert.alert("Error", error.message);
-      }
       if (error.isAxiosError) {
-        Alert.alert("Error", error.response.data.message);
+        console.log(error);
+        Alert.alert("Error", error.response.data.error);
       }
       return false;
     }

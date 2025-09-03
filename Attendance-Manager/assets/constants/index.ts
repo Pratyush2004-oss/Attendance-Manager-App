@@ -1,4 +1,4 @@
-export const BASE_URL = "";
+export const BASE_URL = "https://attendance-manager-app-seven.vercel.app";
 
 export const UserApis = {
   registerUser: `${BASE_URL}/api/auth/register`,
@@ -15,6 +15,11 @@ export const batchApis = {
   getBatch: `${BASE_URL}/api/batch/get-batch`,
   updateBatch: `${BASE_URL}/api/batch/update-batch`,
   deleteBatch: `${BASE_URL}/api/batch/delete-batch`
+}
+
+export const OrganizationApis = {
+  getOrganizationList : `${BASE_URL}/api/organization/get-organization-list`,
+  
 }
 
 export const NavigationOptions = [
