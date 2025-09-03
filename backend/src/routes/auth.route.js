@@ -1,5 +1,5 @@
 import express from 'express';
-import { checkAdmin, checkAuth, loginUser, registerUser, verifyUser } from '../controllers/auth.controller.js';
+import { checkAdmin, checkAuth, loginUser, registerUser, resetPassword, sendResetPasswordOtp, verifyUser } from '../controllers/auth.controller.js';
 import { AuthMiddleware, requireAdmin } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
@@ -9,6 +9,8 @@ router.get('/verify-user/:email__token', verifyUser);
 router.post('/login', loginUser);
 router.get("/check-auth", AuthMiddleware, checkAuth);
 router.get("/check-admin", AuthMiddleware, requireAdmin, checkAdmin);
+router.post("/forgot-password", sendResetPasswordOtp);
+router.post('/reset-password', resetPassword);
 
 
 export default router;
