@@ -57,6 +57,16 @@ const StudentTabLayout = () => {
             ),
           }}
         />
+        {/* assignments */}
+        <Tabs.Screen
+          name="assignments"
+          options={{
+            title: "Assignments",
+            tabBarIcon: ({ color, size }) => (
+              <Feather name="book-open" color={color} size={size} />
+            ),
+          }}
+        />
         {/* profile */}
         <Tabs.Screen
           name="profile"

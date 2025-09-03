@@ -1,4 +1,4 @@
-export type loginInputInput = {
+export type loginInputType = {
   email: string;
   password: string;
 };
@@ -13,11 +13,6 @@ export type signupInputType = {
     name: string;
     number: string;
   };
-};
-
-export type verifyEmailInputType = {
-  email: string;
-  otp: string;
 };
 
 export type resetPasswordInputType = {
