@@ -54,7 +54,7 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
       //   check for guardian details for students only
       if (
         userInput.role === "student" &&
-        !(userInput.guardian.name && userInput.guardian.number)
+        !(userInput.guardianName && userInput.guardianNumber)
       ) {
         Alert.alert("Error", "Please fill guardian details.");
         return false;

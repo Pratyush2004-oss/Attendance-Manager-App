@@ -6,6 +6,7 @@ import {
   TextInput,
   Pressable,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -13,6 +14,7 @@ import { useRouter } from "expo-router";
 const Login = () => {
   const router = useRouter();
   const [showPassword, setshowPassword] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
 
   const handleLogin = () => {
     router.push("/(studentTab)");
@@ -75,7 +77,13 @@ const Login = () => {
                 className="w-full px-3 py-2 rounded-md bg-blue-900/70"
                 onPress={handleLogin}
               >
-                <Text className="text-2xl text-center text-white">Login</Text>
+                <Text className="text-2xl text-center text-white">
+                  {isLoading ? (
+                    <ActivityIndicator className="text-white" />
+                  ) : (
+                    "Login"
+                  )}
+                </Text>
               </TouchableOpacity>
             </View>
             <Pressable

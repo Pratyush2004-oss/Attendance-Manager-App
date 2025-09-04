@@ -9,10 +9,8 @@ export type signupInputType = {
   password: string;
   role: "student" | "teacher" | "";
   Organization: string[];
-  guardian: {
-    name: string;
-    number: string;
-  };
+  guardianName: string ;
+  guardianNumber: string;
 };
 
 export type resetPasswordInputType = {

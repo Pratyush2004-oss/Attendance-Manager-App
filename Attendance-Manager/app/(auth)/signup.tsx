@@ -4,9 +4,10 @@ import { useUserStore } from "@/store/userStore";
 import { OrganizationType, signupInputType } from "@/types";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   KeyboardAvoidingView,
   Pressable,
@@ -19,6 +20,8 @@ import {
 const Signup = () => {
   const router = useRouter();
   const [showPassword, setshowPassword] = useState(false);
+  const [isloading, setIsloading] = useState(false);
+  const pathName = usePathname();
   const [OrganizationList, setOrganizationList] = useState<OrganizationType[]>(
     []
   );
@@ -29,20 +32,18 @@ const Signup = () => {
     Organization: [],
     password: "",
     role: "",
-    guardian: {
-      name: "",
-      number: "",
-    },
+    guardianName: "",
+    guardianNumber: "",
   });
 
   const { signup } = useUserStore();
+  const fetchOrganizationList = async () => {
+    const organizationList = await getOrganizationList();
+    setOrganizationList(organizationList);
+  };
   useEffect(() => {
-    const fetchOrganizationList = async () => {
-      const organizationList = await getOrganizationList();
-      setOrganizationList(organizationList);
-    };
     fetchOrganizationList();
-  }, []);
+  }, [pathName]);
 
   const handleSelectOrganization = (inputValue: string) => {
     if (input.Organization.includes(inputValue)) {
@@ -71,9 +72,15 @@ const Signup = () => {
 
   // Handle form submission
   const handleSignup = async () => {
-    const response = await signup(input);
-    if (response) {
-      router.push("/(auth)");
+    try {
+      setIsloading(true);
+      const response = await signup(input);
+      if (response) {
+        router.push("/(auth)");
+      }
+    } catch (error) {
+    } finally {
+      setIsloading(false);
     }
   };
   return (
@@ -207,38 +214,36 @@ const Signup = () => {
                 </View>
               </View>
               {/* Organization */}
-              {OrganizationList && OrganizationList.length > 0 && (
-                <View className="w-full gap-2">
-                  <Text className="ml-3 text-xl font-bold text-white">
-                    Organization:
-                  </Text>
-                  <View className="w-full bg-white rounded-lg">
-                    <Picker
-                      selectedValue={""}
-                      onValueChange={(itemValue) =>
-                        handleSelectOrganization(itemValue)
-                      }
-                    >
-                      <Picker.Item label="Select Organization" value="" />
-                      {OrganizationList.map((organization) => (
-                        <Picker.Item
-                          key={organization._id}
-                          label={organization.name}
-                          value={organization._id}
-                        />
-                      ))}
-                    </Picker>
-                  </View>
+              <View className="w-full gap-2">
+                <Text className="ml-3 text-xl font-bold text-white">
+                  Organization:
+                </Text>
+                <View className="w-full bg-white rounded-lg">
+                  <Picker
+                    selectedValue={""}
+                    onValueChange={(itemValue) =>
+                      handleSelectOrganization(itemValue)
+                    }
+                  >
+                    <Picker.Item label="Select Organization" value="" />
+                    {OrganizationList.map((organization) => (
+                      <Picker.Item
+                        key={organization._id}
+                        label={organization.name}
+                        value={organization._id}
+                      />
+                    ))}
+                  </Picker>
                 </View>
-              )}
+              </View>
               {/* map name of all the selected organization */}
               <FlatList
                 horizontal
-                className="w-full gap-2 py-2 mt-2 overflow-auto rounded-lg"
+                className="w-full py-2 rounded-lg"
                 data={filteredOrganization()}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
-                  <View className="relative px-3 py-2 mt-1 bg-gray-200 rounded-full">
+                  <View className="relative px-3 py-2 mr-5 bg-gray-200 rounded-full">
                     <Pressable className="absolute bg-red-500 rounded-full -right-2 -top-2">
                       <MaterialIcons
                         name="close"
@@ -266,6 +271,13 @@ const Signup = () => {
                     <TextInput
                       placeholder="John Doe"
                       className="w-full px-3 py-2 text-xl bg-white rounded-md"
+                      value={input.guardianName}
+                      onChangeText={(text) =>
+                        setInput({
+                          ...input,
+                          guardianName: text,
+                        })
+                      }
                     />
                   </View>
 
@@ -278,6 +290,13 @@ const Signup = () => {
                       placeholder="+91 1234567890"
                       className="w-full px-3 py-2 text-xl bg-white rounded-md"
                       keyboardType="phone-pad"
+                      value={input.guardianNumber}
+                      onChangeText={(text) =>
+                        setInput({
+                          ...input,
+                          guardianNumber: text,
+                        })
+                      }
                     />
                   </View>
                 </View>
@@ -286,8 +305,15 @@ const Signup = () => {
               <TouchableOpacity
                 className="w-full px-3 py-2 rounded-md bg-blue-900/70"
                 onPress={handleSignup}
+                disabled={isloading}
               >
-                <Text className="text-2xl text-center text-white">Signup</Text>
+                <Text className="text-2xl text-center text-white">
+                  {isloading ? (
+                    <ActivityIndicator className="text-white" size={"small"} />
+                  ) : (
+                    "Signup"
+                  )}
+                </Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
