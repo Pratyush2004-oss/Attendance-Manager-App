@@ -8,8 +8,11 @@ export type signupInputType = {
   email: string;
   password: string;
   role: "student" | "teacher" | "";
-  Organization: string[];
-  guardianName: string ;
+  Organization: {
+    _id: string;
+    name: string;
+  }[];
+  guardianName: string;
   guardianNumber: string;
 };
 
@@ -24,8 +27,8 @@ export type UserType = {
   _id: string;
   name: string;
   email: string;
-  role: ["student", "teacher"];
-  Organization: string[] | string;
+  role: "student" | "teacher";
+  Organization: OrganizationType[];
   guardian: {
     name: string | null;
     number: string | null;

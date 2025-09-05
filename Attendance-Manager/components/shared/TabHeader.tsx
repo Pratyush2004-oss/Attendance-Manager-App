@@ -1,7 +1,8 @@
-import { View, Text, TouchableOpacity, Pressable, Image } from "react-native";
-import React, { useState } from "react";
+import { useUserStore } from "@/store/userStore";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 
 const TabHeader = ({
   onSidebarPress,
@@ -12,12 +13,14 @@ const TabHeader = ({
 }) => {
   const router = useRouter();
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const { logout } = useUserStore();
 
   const handleProfilePress = () => {
     setDropdownVisible(!dropdownVisible);
     if (onProfilePress) onProfilePress();
   };
   const handleLogout = () => {
+    logout();
     router.push("/(auth)");
     setDropdownVisible(false);
   };

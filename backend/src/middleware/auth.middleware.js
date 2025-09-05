@@ -96,7 +96,7 @@ export const OrganizationAdmin = expressAsyncHandler(async (req, res, next) => {
     try {
         const currentUser = req.user;
 
-        for (org in currentUser.Organization) {
+        for (let org in currentUser.Organization) {
             const Organization = await OrganizationModel.findById(currentUser.Organization);
             if (!Organization) {
                 return res.status(401).json({ message: "Unauthorized, Organization not found" });

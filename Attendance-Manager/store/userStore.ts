@@ -73,8 +73,9 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
       return true;
     } catch (error: any) {
       if (error.isAxiosError) {
-        console.log(error);
         Alert.alert("Error", error.response.data.error);
+      } else {
+        Alert.alert("Error", error.message);
       }
       return false;
     }
@@ -90,24 +91,36 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
       Alert.alert("Error", "Please enter a valid email address.");
       return;
     }
-
-    const response = await axios.post(UserApis.loginUser, userInput);
-    if (response.status === 400) throw new Error(response.data.message);
-
-    // check for admin
     try {
-      const responseAdmin = await axios.get(UserApis.checkAdmin, {
-        headers: {
-          Authorization: `Bearer ${response.data.token}`,
-        },
-      });
-      if (responseAdmin.data.isAdmin) set({ isAdmin: true });
+      const response = await axios.post(UserApis.loginUser, userInput);
+      if (response.status === 400) throw new Error(response.data.message);
 
-      if (responseAdmin.status === 401) throw new Error(responseAdmin.data);
-    } catch (error) {}
-    set({ isAuthenticated: true, user: response.data.user });
-    Alert.alert("Success", response.data.message);
-    AsyncStorage.setItem("token", response.data.token);
+      // check for admin
+      try {
+        const responseAdmin = await axios.get(UserApis.checkAdmin, {
+          headers: {
+            Authorization: `Bearer ${response.data.token}`,
+          },
+        });
+        if (responseAdmin.data.isAdmin) set({ isAdmin: true });
+
+        if (responseAdmin.status === 401) throw new Error(responseAdmin.data);
+      } catch (error) {}
+
+      set({
+        isAuthenticated: true,
+        user: response.data.user,
+        token: response.data.token,
+      });
+      Alert.alert("Success", response.data.message);
+      AsyncStorage.setItem("token", response.data.token);
+    } catch (error: any) {
+      if (error.isAxiosError) {
+        Alert.alert("Error", error.response.data.message);
+      } else {
+        Alert.alert("Error", error.message);
+      }
+    }
   },
   //   check auth controller
   checkAuth: async () => {
@@ -165,34 +178,49 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
       Alert.alert("Success", response.data.message);
       return true;
     } catch (error: any) {
-      Alert.alert("Error", error.response.error);
+      if (error.isAxiosError) {
+        Alert.alert("Error", error.response.error);
+      } else {
+        Alert.alert("Error", error.message);
+      }
       return false;
     }
   },
   //   reset password controller
   resetPassword: async (resetPasswordInput) => {
-    if (
-      !(
-        resetPasswordInput.email ||
-        resetPasswordInput.newPassword ||
-        resetPasswordInput.confirmPassword ||
-        resetPasswordInput.otp
-      )
-    ) {
-      Alert.alert("Error", "Please fill all the fields");
+    try {
+      if (
+        !(
+          resetPasswordInput.email ||
+          resetPasswordInput.newPassword ||
+          resetPasswordInput.confirmPassword ||
+          resetPasswordInput.otp
+        )
+      ) {
+        Alert.alert("Error", "Please fill all the fields");
+        return false;
+      }
+      if (
+        resetPasswordInput.newPassword !== resetPasswordInput.confirmPassword
+      ) {
+        Alert.alert("Error", "Password doesn;t match");
+        return false;
+      }
+      const resposne = await axios.post(UserApis.forgotPassword, {
+        ...resetPasswordInput,
+        confirmPassword: undefined,
+      });
+      if (resposne.status === 400) throw new Error(resposne.data.error);
+      Alert.alert("Success", resposne.data.message);
+      return true;
+    } catch (error: any) {
+      if (error.isAxiosError) {
+        Alert.alert("Error", error.response.error);
+      } else {
+        Alert.alert("Error", error.message);
+      }
       return false;
     }
-    if (resetPasswordInput.newPassword !== resetPasswordInput.confirmPassword) {
-      Alert.alert("Error", "Password doesn;t match");
-      return false;
-    }
-    const resposne = await axios.post(UserApis.forgotPassword, {
-      ...resetPasswordInput,
-      confirmPassword: undefined,
-    });
-    if (resposne.status === 400) throw new Error(resposne.data.error);
-    Alert.alert("Success", resposne.data.message);
-    return true;
   },
   //   logout controller
   logout: () => {

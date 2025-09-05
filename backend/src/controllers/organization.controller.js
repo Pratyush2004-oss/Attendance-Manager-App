@@ -45,7 +45,7 @@ export const getAllTeachers = expressAsyncHandler(async (req, res, next) => {
 })
 
 // verify teacher by the admin of the organization
-export const verifyTeacher = expressAsyncHandler(async (req, res, next) => {
+export const verifyTeacherAccount = expressAsyncHandler(async (req, res, next) => {
     try {
         const { teacherId } = req.params;
         const user = req.user;
@@ -69,6 +69,51 @@ export const verifyTeacher = expressAsyncHandler(async (req, res, next) => {
         return res.status(200).json({ message: "Teacher verified successfully" });
     } catch (error) {
         console.log("Error in verifyTeacher controller: " + error);
+        next(error);
+    }
+})
+
+// delete teacher account
+export const deleteTeacherAccount = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const { teacherId } = req.params;
+        const user = req.user;
+        const teacher = await UserModel.findById(teacherId);
+        if (!teacher) {
+            return res.status(404).json({ message: "Teacher not found" });
+        }
+
+        // check whether your organization and teacher organization are same
+        if (!user.Organization.includes(teacher.Organization)) {
+            return res.status(401).json({ message: "Unauthorized, access denied" });
+        }
+
+        // delete the account from the database
+        await teacher.remove();
+
+        return res.status(200).json({ message: "Teacher deleted successfully" });
+    } catch (error) {
+        console.log("Error in deleteTeacher controller: " + error);
+        next(error);
+    }
+})
+
+// check for Organization Admin
+export const isOrganizationAdmin = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const user = req.user;
+        console.log(user);
+        const organization = await OrganizationModel.findById(user.Organization);
+        if (!organization) {
+            return res.status(401).json({ message: "Unauthorized, Organization not found" });
+        }
+        const isAdmin = organization.adminIds.includes(user.email);
+        if (!isAdmin) {
+            return res.status(401).json({ message: "Unauthorized, access denied" });
+        }
+        res.status(200).json({ isAdmin });
+    } catch (error) {
+        console.log("Error in isOrganizationAdmin middleware: " + error);
         next(error);
     }
 })

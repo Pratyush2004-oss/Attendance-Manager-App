@@ -211,14 +211,15 @@ export const loginUser = expressAsyncHandler(async (req, res, next) => {
         // generate token
         const token = generateToken(user._id);
         res.status(200).json({
-            message: "Login successful", token,
+            message: "Login successful",
+            token,
             user: {
+                _id: user._id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
                 guardian: user.guardian,
-                Organization: user.Organization,
-                isTeacherVerified: user.isTeacherVerified
+                Organization: user.Organization
             }
         });
 

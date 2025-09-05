@@ -11,14 +11,29 @@ import {
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useUserStore } from "@/store/userStore";
+import { loginInputType } from "@/types";
 const Login = () => {
   const router = useRouter();
   const [showPassword, setshowPassword] = useState(false);
   const [isLoading, setisLoading] = useState(false);
+  const { login } = useUserStore();
+  const [input, setinput] = useState<loginInputType>({
+    email: "",
+    password: "",
+  });
 
-  const handleLogin = () => {
-    router.push("/(studentTab)");
+  // handle login logic
+  const handleLogin = async () => {
+    try {
+      setisLoading(true);
+      await login(input);
+    } catch (error) {
+    } finally {
+      setisLoading(false);
+    }
   };
+
   return (
     <KeyboardAvoidingView
       className="items-center justify-between flex-1 bg-gray-300"
@@ -51,6 +66,10 @@ const Login = () => {
                 <TextInput
                   placeholder="john.doe@example.com"
                   className="w-full px-3 py-2 text-xl bg-white rounded-md"
+                  value={input.email}
+                  onChangeText={(text) => setinput({ ...input, email: text })}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
                 />
               </View>
               <View className="relative w-full gap-2">
@@ -61,6 +80,8 @@ const Login = () => {
                   secureTextEntry={!showPassword}
                   placeholder="Password"
                   className="w-full px-3 py-2 text-xl bg-white rounded-md"
+                  value={input.password}
+                  onChangeText={(text) => setinput({ ...input, password: text })}
                 />
                 <Pressable
                   className="absolute -translate-y-1/2 right-3 top-3/4"
@@ -79,7 +100,7 @@ const Login = () => {
               >
                 <Text className="text-2xl text-center text-white">
                   {isLoading ? (
-                    <ActivityIndicator className="text-white" />
+                    <ActivityIndicator className="text-white" size={"small"} />
                   ) : (
                     "Login"
                   )}

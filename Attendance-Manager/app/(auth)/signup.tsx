@@ -37,6 +37,7 @@ const Signup = () => {
   });
 
   const { signup } = useUserStore();
+  // fetch Organization List
   const fetchOrganizationList = async () => {
     const organizationList = await getOrganizationList();
     setOrganizationList(organizationList);
@@ -45,6 +46,7 @@ const Signup = () => {
     fetchOrganizationList();
   }, [pathName]);
 
+  // Handle select Organization
   const handleSelectOrganization = (inputValue: string) => {
     if (input.Organization.includes(inputValue)) {
       return;
@@ -55,6 +57,7 @@ const Signup = () => {
     }));
   };
 
+  // Handle remove Organization
   const handleRemoveOrganization = (inputValue: string) => {
     setInput((prevInput) => ({
       ...prevInput,
@@ -64,6 +67,7 @@ const Signup = () => {
     }));
   };
 
+  // Filter Organization to display
   const filteredOrganization = () => {
     return OrganizationList.filter((org) =>
       input.Organization.includes(org._id)
