@@ -1,7 +1,9 @@
 import AuthHeader from "@/components/auth/AuthHeader";
 import OtpVerification from "@/components/auth/OtpVerification";
+import { useUserStore } from "@/store/userStore";
 import { resetPasswordInputType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
@@ -17,6 +19,8 @@ import {
 const ForgotPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showmodal, setShowModal] = useState(false);
+  const { forgotPassword, resetPassword } = useUserStore();
+  const router = useRouter();
 
   const [input, setinput] = useState<resetPasswordInputType>({
     email: "",
@@ -29,21 +33,20 @@ const ForgotPassword = () => {
     setinput({ ...input, otp });
   };
 
-  const handleReset = () => {
-    if (input.email === "") {
-      Alert.alert("Error", "Please enter your email address.");
-      return;
+  const handleForgotPassword = async () => {
+    const res = await forgotPassword(input.email);
+    if (res) {
+      setShowModal(true);
     }
-    setShowModal(true);
   };
 
-  const handleConfirm = () => {
+  const handleResetPassword = async () => {
     console.log(input);
-    if (input.newPassword !== input.confirmPassword) {
-      Alert.alert("Error", "Passwords do not match.");
-      return;
+    const res = await resetPassword(input);
+    if (res) {
+      setShowModal(false);
+      router.replace("/(auth)");
     }
-    setShowModal(false);
   };
 
   return (
@@ -70,7 +73,7 @@ const ForgotPassword = () => {
               </View>
               <TouchableOpacity
                 className="w-full px-3 py-2 rounded-md bg-blue-900/70"
-                onPress={handleReset}
+                onPress={handleForgotPassword}
               >
                 <Text className="text-2xl text-center text-white">
                   Reset Password
@@ -168,7 +171,7 @@ const ForgotPassword = () => {
                     {/* Confirm Button */}
                     <TouchableOpacity
                       className="w-full px-3 py-2 mt-5 rounded-md bg-blue-900/70"
-                      onPress={handleConfirm}
+                      onPress={handleResetPassword}
                     >
                       <Text className="text-2xl text-center text-white">
                         Confirm

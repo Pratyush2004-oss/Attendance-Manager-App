@@ -259,8 +259,8 @@ export const getAllBatchesForTeacher = expressasyncHandler(async (req, res, next
             .select("_id name teacherId Organization")
             .populate("teacherId", { name: 1, email: 1 })
         const batchDetails = batches.map((batch) => ({
-            ...batch,
-            studentCount: batch.students.length
+            ...batch.toJSON(),
+            studentCount: batch.students && batch.students.length || 0
         }))
         return res.status(200).json({ batchDetails });
     } catch (error) {
@@ -290,6 +290,7 @@ export const getBatchByIdForStudent = expressasyncHandler(async (req, res, next)
         const { batchId } = req.params;
         const user = req.user;
         const batch = await BatchModel.find({ _id: batchId, Organization: user.Organization })
+            .select("_id name teacherId Organization")
             .populate("teacherId", { name: 1, email: 1 })
         return res.status(200).json({ batch });
     } catch (error) {
@@ -310,7 +311,7 @@ export const getAllBatchesForStudent = expressasyncHandler(async (req, res, next
 
         const batchDetails = batches.map((batch) => ({
             ...batch.toJSON(),
-            studentCount: batch.students.length
+            studentCount: batch.students && batch.students.length || 0
         }))
         return res.status(200).json({ batchDetails });
     } catch (error) {

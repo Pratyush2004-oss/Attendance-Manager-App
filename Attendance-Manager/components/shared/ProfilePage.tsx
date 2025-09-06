@@ -3,8 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 const ProfilePage = () => {
-  const { user, token } = useUserStore();
-  console.log(token);
+  const { user } = useUserStore();
   return (
     user && (
       <View className="relative items-center justify-around flex-1">
@@ -21,12 +20,14 @@ const ProfilePage = () => {
             }
             className="object-contain border-8 border-blue-400 rounded-full shadow-md size-56 aspect-square"
           />
-          <Text className="mt-3 text-3xl font-bold text-center text-blue-700">
+          <Text className="mt-3 text-3xl font-bold text-center text-blue-700/75">
             {user.name}
           </Text>
           <Text className="text-2xl text-center">{user.email}</Text>
-          <Text className="mt-5 text-3xl text-center">
-            {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+          <Text
+            className={`mt-5 text-3xl text-center ${user.role === "teacher" ? "text-green-600" : "text-blue-600"}`}
+          >
+            {user.role.toUpperCase()}
           </Text>
         </View>
 
