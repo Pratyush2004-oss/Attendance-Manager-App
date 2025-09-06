@@ -5,16 +5,13 @@ import axios from "axios";
 const useTeacherHook = () => {
   const { token } = useUserStore();
   const getListOfAllBatches = async () => {
-    console.log(token);
     try {
       const batches = await axios.get(batchApis.get_Batches_for_Teacher, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(batches.data);
-
-      return batches.data.batcheDetails;
+      return batches.data.batchDetails;
     } catch (error) {
       console.log(error);
     }

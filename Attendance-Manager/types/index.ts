@@ -49,13 +49,22 @@ export type BatchForStudentType = {
 export type BatchForTeacherType = {
   _id: string;
   name: string;
-  Organization: string;
-  teacherId: {
-    _id: string;
+  Organization: {
     name: string;
-    email: string;
   };
-  students: string[];
+  batchJoiningCode: string | null;
+  studentCount: number;
+  students:
+    | {
+        _id: string;
+        name: string;
+        email: string;
+        guardian: {
+          name: string;
+          number: string;
+        };
+      }[]
+    | null;
 };
 
 export type OrganizationType = {

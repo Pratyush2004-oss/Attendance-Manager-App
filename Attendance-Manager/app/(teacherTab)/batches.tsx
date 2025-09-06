@@ -1,21 +1,21 @@
-import { View, Text } from "react-native";
-import React, { useEffect, useState } from "react";
-import useTeacherHook from "@/hooks/UseTeacherHook";
+import BatchFlatList from "@/components/BatchFlatList";
+import CreateBatch from "@/components/CreateBatch";
+import React from "react";
+import { FlatList, View } from "react-native";
 
 const Batches = () => {
-  const [BatchList, setBatchList] = useState([]);
-  const { getListOfAllBatches } = useTeacherHook();
-  const getBatchList = async () => {
-    const batches = await getListOfAllBatches();
-    setBatchList(batches);
-  };
-  useEffect(() => {
-    BatchList && getBatchList();
-  }, []);
   return (
-    <View>
-      <Text>Batches</Text>
-    </View>
+    <FlatList
+      data={[]}
+      className="flex-1 bg-gray-100"
+      ListHeaderComponent={() => (
+        <View className="flex-1">
+          <CreateBatch />
+          <BatchFlatList />
+        </View>
+      )}
+      renderItem={() => null}
+    />
   );
 };
 

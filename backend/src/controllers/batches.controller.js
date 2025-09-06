@@ -256,8 +256,8 @@ export const getAllBatchesForTeacher = expressasyncHandler(async (req, res, next
         const user = req.user;
         const batches = await BatchModel.find({ teacherId: user._id, Organization: user.Organization })
             .sort({ createdAt: -1 })
-            .select("_id name teacherId Organization")
-            .populate("teacherId", { name: 1, email: 1 })
+            .select("_id name Organization batchJoiningCode")
+            .populate("Organization", { name: 1, _id: 0 })
         const batchDetails = batches.map((batch) => ({
             ...batch.toJSON(),
             studentCount: batch.students && batch.students.length || 0
@@ -275,7 +275,7 @@ export const getBatchByIdForTeacher = expressasyncHandler(async (req, res, next)
         const { batchId } = req.params;
         const user = req.user;
         const batch = await BatchModel.find({ _id: batchId, teacherId: user._id, Organization: user.Organization })
-            .populate("teacherId", { name: 1, email: 1 })
+            .select("_id name Organization batchJoiningCode students")
             .populate("students", { _id: 1, name: 1, email: 1, guardian: 1 });
         return res.status(200).json({ batch });
     } catch (error) {
