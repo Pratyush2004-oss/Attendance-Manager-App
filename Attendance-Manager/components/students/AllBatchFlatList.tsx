@@ -1,24 +1,27 @@
 import useStudentHook from "@/hooks/UseStudentHook";
-import { BatchForStudentType } from "@/types";
+import { AllBatchesType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
-  Pressable,
+  Modal,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import BatchModal from "./BatchModal";
 import SearchBar from "../shared/SearchBar";
-
-const BatchFlatList = () => {
-  const [BatchList, setBatchList] = useState<BatchForStudentType[]>([]);
+const AllBatchFlatList = () => {
+  const [BatchList, setBatchList] = useState<AllBatchesType[]>([]);
   const [searchInput, setSearchInput] = useState("");
-  const { getListOfAllBatches } = useStudentHook();
+  const [selectedBatch, setSelectedBatch] = useState<AllBatchesType | null>(
+    null
+  );
+  const { getAllBatchesListOfOrganization } = useStudentHook();
   const getBatchList = async () => {
-    const batches = await getListOfAllBatches();
+    const batches = await getAllBatchesListOfOrganization();
     setBatchList(batches);
   };
   useEffect(() => {
@@ -49,7 +52,7 @@ const BatchFlatList = () => {
           <View className="mt-5">
             <View className="flex-row items-center justify-between">
               <Text className="text-3xl font-bold text-center">
-                Your Batches ({BatchList.length})
+                All Batches ({BatchList.length})
               </Text>
             </View>
           </View>
@@ -64,7 +67,10 @@ const BatchFlatList = () => {
           </View>
         )}
         renderItem={({ item }) => (
-          <View className="relative flex-row items-center gap-3 px-5 py-3 mt-3 shadow-lg bg-blue-700/70 rounded-xl">
+          <TouchableOpacity
+            onLongPress={() => setSelectedBatch(item)}
+            className="relative flex-row items-center gap-3 px-5 py-3 mt-3 shadow-lg bg-blue-700/70 rounded-xl"
+          >
             <Image
               source={require("@/assets/images/student.jpeg")}
               className="rounded-full size-28 aspect-square"
@@ -82,21 +88,28 @@ const BatchFlatList = () => {
                   </Text>
                 </Text>
               </Text>
-              <Text className="text-lg font-medium text-white">
-                Students:{" "}
-                <Text className="text-xl font-extrabold">
-                  {item.studentCount}
-                </Text>
-              </Text>
             </View>
-            <TouchableOpacity className="absolute right-5">
-              <Ionicons name="arrow-forward-circle" size={30} color="white" />
-            </TouchableOpacity>
-          </View>
+            {item.isStudent && (
+              <TouchableOpacity className="absolute p-1 bg-white rounded-full right-5">
+                <Ionicons
+                  name="shield-checkmark-outline"
+                  size={24}
+                  color="green"
+                  className="ml-auto"
+                />
+              </TouchableOpacity>
+            )}
+            {selectedBatch?._id === item._id && (
+              <BatchModal
+                selectedBatch={selectedBatch}
+                setSelectedBatch={setSelectedBatch}
+              />
+            )}
+          </TouchableOpacity>
         )}
       />
     </>
   );
 };
 
-export default BatchFlatList;
+export default AllBatchFlatList;

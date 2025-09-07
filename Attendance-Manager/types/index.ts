@@ -77,6 +77,11 @@ export type BatchForTeacherType = {
     | null;
 };
 
+export type JoinBatchInputType = {
+  batchId: string;
+  batchJoiningCode: string;
+};
+
 export type OrganizationType = {
   _id: string;
   name: string;

@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import useTeacherHook from "@/hooks/UseTeacherHook";
 import { BatchForTeacherType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
+import SearchBar from "../shared/SearchBar";
 
 const BatchFlatList = () => {
   const [BatchList, setBatchList] = useState<BatchForTeacherType[]>([]);
@@ -35,22 +36,7 @@ const BatchFlatList = () => {
     <>
       {/* Search Bar */}
       {BatchList.length > 0 && (
-        <View className="flex-row items-center justify-center my-3 rounded-lg">
-          <View className="flex-row w-5/6 bg-white rounded-full">
-            <TextInput
-              placeholder="Search"
-              className="w-5/6 p-4 text-base bg-transparent rounded-full"
-              value={searchInput}
-              onChangeText={setSearchInput}
-            />
-            <Ionicons
-              className="absolute items-center justify-center right-1"
-              name="search-circle"
-              size={45}
-              color="#3b82f6"
-            />
-          </View>
-        </View>
+        <SearchBar searchInput={searchInput} setSearchInput={setSearchInput} />
       )}
       <FlatList
         className="flex-1 px-4 bg-gray-100"

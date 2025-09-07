@@ -163,26 +163,26 @@ export const addStudentUsingCode = expressasyncHandler(async (req, res, next) =>
 
 
         if (!batchJoiningCode || !batchId) {
-            return res.status(400).json({ message: "Batch joining code and batch ID are required" });
+            return res.status(400).json({ error: "Batch joining code and batch ID are required" });
         }
 
         const batch = await BatchModel.findById(batchId);
 
         if (!batch) {
-            return res.status(404).json({ message: "Batch not found" });
+            return res.status(404).json({ error: "Batch not found" });
         }
 
         // check if the student and batch are in the same organization
         if (!user.Organization.some((org) => org.equals(batch.Organization))) {
-            return res.status(400).json({ message: "You are not authorized to join this batch" });
+            return res.status(400).json({ error: "You are not authorized to join this batch" });
         }
 
         if (batch.students.includes(user._id)) {
-            return res.status(400).json({ message: "You are already a student of this batch" });
+            return res.status(400).json({ error: "You are already a student of this batch" });
         }
 
         if (batch.batchJoiningCode !== batchJoiningCode) {
-            return res.status(400).json({ message: "Invalid batch joining code" });
+            return res.status(400).json({ error: "Invalid batch joining code" });
         }
 
         batch.students.push(user._id);
