@@ -71,7 +71,7 @@ export async function sendResetOtp(recipientEmail, recipientName, otp) {
     email: recipientEmail,
     name: recipientName
   }];
-  sendSmtpEmail.subject = 'Your verification link is here';
+  sendSmtpEmail.subject = 'Your Password reset otp';
   sendSmtpEmail.htmlContent = `
     <html>
       <body>

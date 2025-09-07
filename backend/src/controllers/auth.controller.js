@@ -242,7 +242,7 @@ export const sendResetPasswordOtp = expressAsyncHandler(async (req, res, next) =
         return res.status(400).json({ error: "User not found" });
     }
     if (user.otp) {
-        return res.status(200).json({ error: "OTP already sent, check your email" });
+        return res.status(200).json({ message: "OTP already sent, check your email" });
     }
     const otp = Math.floor(100000 + Math.random() * 900000);
     const emailSent = await sendResetOtp(email, user.name, otp);

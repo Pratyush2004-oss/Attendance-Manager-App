@@ -175,10 +175,8 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
     try {
       const response = await axios.post(UserApis.forgotPassword, { email });
       if (response.status === 400) throw new Error(response.data.message);
-      Alert.alert("Success", response.data.message);
       return true;
     } catch (error: any) {
-      console.log(error.response);
       if (error.isAxiosError) {
         Alert.alert("Error", error.response.data.error);
       } else {
@@ -192,9 +190,9 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
     try {
       if (
         !(
-          resetPasswordInput.email ||
-          resetPasswordInput.newPassword ||
-          resetPasswordInput.confirmPassword ||
+          resetPasswordInput.email &&
+          resetPasswordInput.newPassword &&
+          resetPasswordInput.confirmPassword &&
           resetPasswordInput.otp
         )
       ) {
@@ -207,18 +205,16 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
         Alert.alert("Error", "Password doesn't match");
         return false;
       }
-      const resposne = await axios.post(UserApis.forgotPassword, {
+      const resposne = await axios.post(UserApis.resetPassword, {
         ...resetPasswordInput,
         confirmPassword: undefined,
       });
-      console.log(resposne.data);
       if (resposne.status === 400) throw new Error(resposne.data.error);
       Alert.alert("Success", resposne.data.message);
       return true;
     } catch (error: any) {
-      console.log(error.resposne);
       if (error.isAxiosError) {
-        Alert.alert("Error", error.response.error);
+        Alert.alert("Error", error.response.data.error);
       } else {
         Alert.alert("Error", error.message);
       }
