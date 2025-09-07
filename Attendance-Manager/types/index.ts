@@ -38,12 +38,15 @@ export type UserType = {
 export type BatchForStudentType = {
   _id: string;
   name: string;
-  Organization: string;
+  Organization: {
+    name: string;
+  };
   teacherId: {
     _id: string;
     name: string;
     email: string;
   };
+  studentCount: number;
 };
 
 export type BatchForTeacherType = {

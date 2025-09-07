@@ -102,7 +102,6 @@ export const deleteTeacherAccount = expressAsyncHandler(async (req, res, next) =
 export const isOrganizationAdmin = expressAsyncHandler(async (req, res, next) => {
     try {
         const user = req.user;
-        console.log(user);
         const organization = await OrganizationModel.findById(user.Organization);
         if (!organization) {
             return res.status(401).json({ message: "Unauthorized, Organization not found" });

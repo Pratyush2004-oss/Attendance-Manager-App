@@ -66,7 +66,6 @@ export const getAllBatchesByName = expressasyncHandler(async (req, res, next) =>
 export const createBatch = expressasyncHandler(async (req, res, next) => {
     try {
         const user = req.user;
-        console.log(user);
         const { name, Organization } = req.body;
 
         if (!name || !Organization) {
@@ -256,10 +255,11 @@ export const getAllBatchesForTeacher = expressasyncHandler(async (req, res, next
         const user = req.user;
         const batches = await BatchModel.find({ teacherId: user._id, Organization: user.Organization })
             .sort({ createdAt: -1 })
-            .select("_id name Organization batchJoiningCode")
+            .select("_id name Organization batchJoiningCode students")
             .populate("Organization", { name: 1, _id: 0 })
         const batchDetails = batches.map((batch) => ({
             ...batch.toJSON(),
+            students: undefined,
             studentCount: batch.students && batch.students.length || 0
         }))
         return res.status(200).json({ batchDetails });
@@ -340,26 +340,32 @@ export const deleteBatch = expressasyncHandler(async (req, res, next) => {
     const { batchId } = req.params;
     const user = req.user;
 
-    if (!batchId) {
-        return res.status(400).json({ message: "Batch ID is required" });
+    try {
+        if (!batchId) {
+            return res.status(400).json({ message: "Batch ID is required" });
+        }
+
+        const batch = await BatchModel.findById(batchId);
+
+        if (!batch) {
+            return res.status(404).json({ message: "Batch not found" });
+        }
+
+        // check the user is actually the teacher of that batch
+        if (batch.teacherId.toString() !== user._id.toString()) {
+            return res.status(403).json({ message: "You are not authorized to delete this batch" });
+        }
+
+        // delete all the attendance of the batch
+        await AttendanceModel.deleteMany({ batchId: batchId });
+
+        // delete the batch
+        await batch.deleteOne();
+
+        res.status(200).json({ message: "Batch deleted successfully" });
+
+    } catch (error) {
+        console.log("Error in deleteBatch controller: " + error);
+        next(error);
     }
-
-    const batch = await BatchModel.findById(batchId);
-
-    if (!batch) {
-        return res.status(404).json({ message: "Batch not found" });
-    }
-
-    // check the user is actually the teacher of that batch
-    if (batch.teacherId.toString() !== user._id.toString()) {
-        return res.status(403).json({ message: "You are not authorized to delete this batch" });
-    }
-
-    // delete all the attendance of the batch
-    await AttendanceModel.deleteMany({ batchId: batchId });
-
-    // delete the batch
-    await batch.deleteOne();
-
-    return res.status(200).json({ message: "Batch deleted successfully" });
 })
