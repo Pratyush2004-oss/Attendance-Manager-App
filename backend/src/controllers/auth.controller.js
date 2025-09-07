@@ -192,7 +192,7 @@ export const loginUser = expressAsyncHandler(async (req, res, next) => {
         const user = await UserModel.findOne({ email })
             .populate("Organization", { name: 1 });
         if (!user) {
-            return res.status(400).json({ error: "Invalid credentials" });
+            return res.status(400).json({ error: "User not found" });
         }
         // checking password
         const isMatch = await bcrypt.compare(password, user.password);
@@ -242,7 +242,7 @@ export const sendResetPasswordOtp = expressAsyncHandler(async (req, res, next) =
         return res.status(400).json({ error: "User not found" });
     }
     if (user.otp) {
-        return res.status(400).json({ error: "OTP already sent, check your email" });
+        return res.status(200).json({ error: "OTP already sent, check your email" });
     }
     const otp = Math.floor(100000 + Math.random() * 900000);
     const emailSent = await sendResetOtp(email, user.name, otp);

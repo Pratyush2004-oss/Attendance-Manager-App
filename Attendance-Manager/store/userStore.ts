@@ -116,7 +116,7 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
       AsyncStorage.setItem("token", response.data.token);
     } catch (error: any) {
       if (error.isAxiosError) {
-        Alert.alert("Error", error.response.data.message);
+        Alert.alert("Error", error.response.data.error);
       } else {
         Alert.alert("Error", error.message);
       }
@@ -178,8 +178,9 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
       Alert.alert("Success", response.data.message);
       return true;
     } catch (error: any) {
+      console.log(error.response);
       if (error.isAxiosError) {
-        Alert.alert("Error", error.response.error);
+        Alert.alert("Error", error.response.data.error);
       } else {
         Alert.alert("Error", error.message);
       }
@@ -203,17 +204,19 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
       if (
         resetPasswordInput.newPassword !== resetPasswordInput.confirmPassword
       ) {
-        Alert.alert("Error", "Password doesn;t match");
+        Alert.alert("Error", "Password doesn't match");
         return false;
       }
       const resposne = await axios.post(UserApis.forgotPassword, {
         ...resetPasswordInput,
         confirmPassword: undefined,
       });
+      console.log(resposne.data);
       if (resposne.status === 400) throw new Error(resposne.data.error);
       Alert.alert("Success", resposne.data.message);
       return true;
     } catch (error: any) {
+      console.log(error.resposne);
       if (error.isAxiosError) {
         Alert.alert("Error", error.response.error);
       } else {
