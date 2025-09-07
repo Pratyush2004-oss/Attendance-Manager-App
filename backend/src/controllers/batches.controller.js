@@ -306,11 +306,13 @@ export const getAllBatchesForStudent = expressasyncHandler(async (req, res, next
         const batches = await BatchModel
             .find({ students: { $in: [user._id] }, Organization: user.Organization })
             .select("_id name teacherId Organization students")
-            .populate("teacherId", { name: 1, email: 1 })
+            .populate("teacherId", { name: 1, _id: 0})
+            .populate("Organization", { name: 1, _id: 0 })
             .sort({ createdAt: -1 });
 
         const batchDetails = batches.map((batch) => ({
             ...batch.toJSON(),
+            students: undefined,
             studentCount: batch.students && batch.students.length || 0
         }))
         return res.status(200).json({ batchDetails });
