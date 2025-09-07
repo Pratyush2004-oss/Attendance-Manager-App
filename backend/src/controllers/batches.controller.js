@@ -197,6 +197,11 @@ export const addStudentUsingCode = expressasyncHandler(async (req, res, next) =>
     }
 })
 
+// leave batch by student
+export const leaveBatch = expressasyncHandler(async (req, res, next) => {
+
+})
+
 // delete student from the batch
 export const deleteStudentFromBatch = expressasyncHandler(async (req, res, next) => {
     try {
@@ -306,7 +311,7 @@ export const getAllBatchesForStudent = expressasyncHandler(async (req, res, next
         const batches = await BatchModel
             .find({ students: { $in: [user._id] }, Organization: user.Organization })
             .select("_id name teacherId Organization students")
-            .populate("teacherId", { name: 1, _id: 0})
+            .populate("teacherId", { name: 1, _id: 0 })
             .populate("Organization", { name: 1, _id: 0 })
             .sort({ createdAt: -1 });
 
@@ -327,10 +332,17 @@ export const getAllBatchesofOrganization = expressasyncHandler(async (req, res, 
     try {
         const user = req.user;
         const batches = await BatchModel.find({ Organization: user.Organization })
-            .select("_id name teacherId")
+            .select("_id name teacherId Organization students")
             .sort({ createdAt: -1 })
-            .populate("teacherId", { name: 1, email: 1 })
-        return res.status(200).json({ batches });
+            .populate("Organization", { name: 1, _id: 0 })
+            .populate("teacherId", { name: 1, _id: 0 })
+
+        const batchDetails = batches.map((batch) => ({
+            ...batch.toJSON(),
+            isStudent: batch.students.includes(user._id) || false,
+            students: undefined,
+        }))
+        return res.status(200).json({ batchDetails });
     } catch (error) {
         console.log("Error in getAllBatches controller: " + error);
         next(error);

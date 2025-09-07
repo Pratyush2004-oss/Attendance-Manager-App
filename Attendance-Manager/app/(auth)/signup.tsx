@@ -48,7 +48,7 @@ const Signup = () => {
 
   // Handle select Organization
   const handleSelectOrganization = (inputValue: string) => {
-    if (input.Organization.includes(inputValue)) {
+    if (input.Organization.some((org) => org === inputValue)) {
       return;
     }
     setInput((prevInput) => ({
@@ -323,8 +323,8 @@ const Signup = () => {
           </ScrollView>
 
           {/* Footer for Login button */}
-          <View className="w-full ">
-            <View className="flex-row items-center justify-center w-full gap-2 py-2 border-t-2 border-white">
+          <View className="w-full">
+            <View className="flex-row items-center justify-center w-full gap-2 py-2 pb-5 border-t-2 border-white">
               <Text className="text-xl text-white">
                 Already have an account?
               </Text>

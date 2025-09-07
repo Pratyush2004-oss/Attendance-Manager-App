@@ -208,6 +208,8 @@ export const loginUser = expressAsyncHandler(async (req, res, next) => {
             return res.status(400).json({ error: "User is not verified, Contact the Organization admin to verify the teacher" });
         }
 
+        // check if the user is the admin of the organization : to-do
+
         // generate token
         const token = generateToken(user._id);
         res.status(200).json({

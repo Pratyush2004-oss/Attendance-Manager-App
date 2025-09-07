@@ -32,18 +32,68 @@ export const OrganizationApis = {
 
 export const NavigationOptions = [
   {
-    title: "Batches",
-    href: "/batches",
-    icon: "bar-chart",
+    category: "Batches",
+    options: [
+      {
+        title: "All Batches",
+        href: "/students/batches",
+        icon: "bar-chart-outline",
+      },
+      {
+        title: "Your Batches",
+        href: "/batches",
+        icon: "bar-chart",
+      },
+    ],
   },
   {
-    title: "Attendance",
-    href: "/attendance",
-    icon: "calendar",
+    category: "Organization",
+    options: [
+      {
+        title: "All Organizations",
+        href: "/organizations",
+        icon: "people-circle-outline",
+      },
+      {
+        title: "Your Organizations",
+        href: "/organizations",
+        icon: "people-circle-outline",
+      },
+    ],
   },
   {
-    title: "Assignments",
-    href: "Assignments",
-    icon: "book-open",
+    category: "Assignments",
+    options: [
+      {
+        title: "Assignments",
+        href: "/assignments",
+        icon: "book-outline",
+      },
+      {
+        title: "Today's Assignments",
+        href: "/assignments",
+        icon: "book-outline",
+      },
+      {
+        title: "Today's Assignments",
+        href: "/assignments",
+        icon: "book-outline",
+      },
+    ],
+  },
+  {
+    category: "Attendance",
+    options: [
+      {
+        title: "Attendance",
+        href: "/attendance",
+        icon: "calendar",
+      },
+      {
+        title: "Attendance Stats",
+        href: "/attendance",
+        icon: "calendar",
+      },
+    ],
   },
 ];

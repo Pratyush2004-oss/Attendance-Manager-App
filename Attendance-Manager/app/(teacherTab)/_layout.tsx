@@ -4,9 +4,11 @@ import TabHeader from "@/components/shared/TabHeader";
 import Sidebar from "@/components/shared/Sidebar";
 import { Tabs } from "expo-router";
 import { AntDesign, Feather } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TeacherTabLayout = () => {
   const [sidebarVisible, setsidebarVisible] = useState(false);
+  const insets = useSafeAreaInsets();
   return (
     <View className="flex-1 bg-white">
       <TabHeader onSidebarPress={() => setsidebarVisible(true)} />
@@ -23,7 +25,7 @@ const TeacherTabLayout = () => {
             backgroundColor: "white",
             borderTopWidth: 1,
             borderTopColor: "#E1E8ED",
-            height: 0,
+            height: 40 + insets.bottom,
           },
         }}
       >

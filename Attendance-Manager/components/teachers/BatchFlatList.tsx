@@ -23,11 +23,19 @@ const BatchFlatList = () => {
   useEffect(() => {
     BatchList.length === 0 && getBatchList();
   }, [BatchList]);
+  const filteredList = () => {
+    return BatchList.filter((item) => {
+      return (
+        item.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+        item.Organization.name.toLowerCase().includes(searchInput.toLowerCase())
+      );
+    });
+  };
   return (
     <>
       {/* Search Bar */}
       {BatchList.length > 0 && (
-        <View className="flex-row items-center justify-center mt-3">
+        <View className="flex-row items-center justify-center my-3 rounded-lg">
           <View className="flex-row w-5/6 bg-white rounded-full">
             <TextInput
               placeholder="Search"
@@ -35,15 +43,19 @@ const BatchFlatList = () => {
               value={searchInput}
               onChangeText={setSearchInput}
             />
-            <Pressable className="absolute items-center justify-center right-1">
-              <Ionicons name="search-circle" size={45} color="#3b82f6" />
-            </Pressable>
+            <Ionicons
+              className="absolute items-center justify-center right-1"
+              name="search-circle"
+              size={45}
+              color="#3b82f6"
+            />
           </View>
         </View>
       )}
       <FlatList
         className="flex-1 px-4 bg-gray-100"
-        data={BatchList}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        data={searchInput ? filteredList() : BatchList}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item._id}
         ListHeaderComponent={() => (

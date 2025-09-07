@@ -81,7 +81,9 @@ const Login = () => {
                   placeholder="Password"
                   className="w-full px-3 py-2 text-xl bg-white rounded-md"
                   value={input.password}
-                  onChangeText={(text) => setinput({ ...input, password: text })}
+                  onChangeText={(text) =>
+                    setinput({ ...input, password: text })
+                  }
                 />
                 <Pressable
                   className="absolute -translate-y-1/2 right-3 top-3/4"
@@ -118,7 +120,7 @@ const Login = () => {
           </View>
 
           {/* Footer for Signup */}
-          <View className="flex-row items-center justify-center w-full gap-2 py-2 border-t-2 border-white">
+          <View className="flex-row items-center justify-center w-full gap-2 py-2 pb-5 border-t-2 border-white">
             <Text className="text-xl text-white">Don't have an account?</Text>
             <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
               <Text className="text-xl text-blue-700">Register</Text>

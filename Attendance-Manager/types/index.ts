@@ -8,10 +8,7 @@ export type signupInputType = {
   email: string;
   password: string;
   role: "student" | "teacher" | "";
-  Organization: {
-    _id: string;
-    name: string;
-  }[];
+  Organization: string[];
   guardianName: string;
   guardianNumber: string;
 };
@@ -42,11 +39,21 @@ export type BatchForStudentType = {
     name: string;
   };
   teacherId: {
-    _id: string;
     name: string;
-    email: string;
   };
   studentCount: number;
+};
+
+export type AllBatchesType = {
+  _id: string;
+  teacherId: {
+    name: string;
+  };
+  name: string;
+  Organization: {
+    name: string;
+  };
+  isStudent: boolean;
 };
 
 export type BatchForTeacherType = {

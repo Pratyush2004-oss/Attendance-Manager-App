@@ -23,27 +23,40 @@ const BatchFlatList = () => {
   useEffect(() => {
     BatchList.length === 0 && getBatchList();
   }, [BatchList]);
+
+  const filteredList = () => {
+    return BatchList.filter((item) => {
+      return (
+        item.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+        item.Organization.name.toLowerCase().includes(searchInput.toLowerCase())
+      );
+    });
+  };
   return (
     <>
       {/* Search Bar */}
       {BatchList.length > 0 && (
-        <View className="flex-row items-center justify-center mt-3">
+        <View className="flex-row items-center justify-center my-3">
           <View className="flex-row w-5/6 bg-white rounded-full">
             <TextInput
               placeholder="Search"
               className="w-5/6 p-4 text-base bg-transparent rounded-full"
               value={searchInput}
-              onChangeText={setSearchInput}
+              onChangeText={(text) => setSearchInput(text)}
             />
-            <Pressable className="absolute items-center justify-center right-1">
-              <Ionicons name="search-circle" size={45} color="#3b82f6" />
-            </Pressable>
+            <Ionicons
+              className="absolute items-center justify-center right-1"
+              name="search-circle"
+              size={45}
+              color="#3b82f6"
+            />
           </View>
         </View>
       )}
       <FlatList
         className="flex-1 px-4 bg-gray-100"
-        data={BatchList}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        data={searchInput ? filteredList() : BatchList}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item._id}
         ListHeaderComponent={() => (
@@ -67,13 +80,21 @@ const BatchFlatList = () => {
         renderItem={({ item }) => (
           <View className="relative flex-row items-center gap-3 px-5 py-3 mt-3 shadow-lg bg-blue-700/70 rounded-xl">
             <Image
-              source={require("@/assets/images/teacher.jpg")}
+              source={require("@/assets/images/student.jpeg")}
               className="rounded-full size-28 aspect-square"
             />
             <View className="gap-1.5">
               <Text className="text-2xl font-bold text-white">{item.name}</Text>
-              <Text className="text-lg font-bold text-white">
+              <Text className="text-2xl font-bold text-emerald-300">
                 ({item.Organization.name})
+              </Text>
+              <Text>
+                <Text className="text-lg font-medium text-white">
+                  Teacher:{" "}
+                  <Text className="text-xl font-extrabold">
+                    {item.teacherId.name}
+                  </Text>
+                </Text>
               </Text>
               <Text className="text-lg font-medium text-white">
                 Students:{" "}
