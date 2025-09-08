@@ -73,7 +73,6 @@ export type BatchForTeacherType = {
 };
 
 export type StudentType = {
-  _id: string;
   name: string;
   email: string;
   guardian: {
@@ -81,6 +80,11 @@ export type StudentType = {
     number: string;
   };
 };
+
+export type BatchdetailType = {
+  _id: string;
+  students: StudentType[];
+}
 
 export type batchParamsType = {
   _id: string

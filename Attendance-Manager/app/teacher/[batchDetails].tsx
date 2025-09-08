@@ -11,7 +11,6 @@ const BatchDetails = () => {
   const fetchStudents = async () => {
     await getBatchDetails(params._id).then((res) => {
       setStudentList(res.students);
-      console.log(res.students);
     });
   };
   useEffect(() => {

@@ -279,9 +279,9 @@ export const getBatchByIdForTeacher = expressasyncHandler(async (req, res, next)
     try {
         const { batchId } = req.params;
         const user = req.user;
-        const batch = await BatchModel.find({ _id: batchId, teacherId: user._id, Organization: user.Organization })
+        const batch = await BatchModel.findOne({ _id: batchId, teacherId: user._id, Organization: user.Organization })
             .select("students")
-            .populate("students", { _id: 1, name: 1, email: 1, guardian: 1 });
+            .populate("students", { _id: 1, name: 1, email: 1, guardian: 1, _id: 0 });
         return res.status(200).json({ batch });
     } catch (error) {
         console.log("Error in getBatchById controller: " + error);
