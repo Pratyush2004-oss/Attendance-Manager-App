@@ -1,4 +1,4 @@
-import { batchApis } from "@/assets/constants";
+import { batchApis, UserApis } from "@/assets/constants";
 import { useUserStore } from "@/store/userStore";
 import { CreateBatchInputType } from "@/types";
 import axios from "axios";
@@ -44,9 +44,25 @@ const useTeacherHook = () => {
     }
   };
 
+  const getBatchDetails = async (batchId: string) => {
+    try {
+      const batchDetails = await axios.get(
+        batchApis.get_Single_Batch_for_Teacher.replace(":batchId", batchId),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (batchDetails.status === 400) throw new Error(batchDetails.data.error);
+      return batchDetails.data.batch;
+    } catch (error) {}
+  };
+
   return {
     getListOfAllBatches,
     createBatch,
+    getBatchDetails,
   };
 };
 

@@ -34,8 +34,8 @@ export type UserType = {
 
 export type CreateBatchInputType = {
   name: string;
-  Organization: string
-}
+  Organization: string;
+};
 
 export type BatchForStudentType = {
   _id: string;
@@ -69,17 +69,25 @@ export type BatchForTeacherType = {
   };
   batchJoiningCode: string | null;
   studentCount: number;
-  students:
-    | {
-        _id: string;
-        name: string;
-        email: string;
-        guardian: {
-          name: string;
-          number: string;
-        };
-      }[]
-    | null;
+  students: StudentType[] | null;
+};
+
+export type StudentType = {
+  _id: string;
+  name: string;
+  email: string;
+  guardian: {
+    name: string;
+    number: string;
+  };
+};
+
+export type batchParamsType = {
+  _id: string
+  name: string;
+  organizationName: string;
+  batchJoiningCode: string;
+  studentCount: string;
 };
 
 export type JoinBatchInputType = {

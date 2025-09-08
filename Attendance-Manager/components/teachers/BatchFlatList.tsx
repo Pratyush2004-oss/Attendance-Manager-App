@@ -1,5 +1,6 @@
 import { BatchForTeacherType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import SearchBar from "../shared/SearchBar";
@@ -12,6 +13,7 @@ const BatchFlatList = ({
   getBatchList: () => Promise<void>;
 }) => {
   const [searchInput, setSearchInput] = useState("");
+  const router = useRouter();
   useEffect(() => {
     BatchList.length === 0 && getBatchList();
   }, [BatchList]);
@@ -77,7 +79,21 @@ const BatchFlatList = ({
                 </Text>
               </Text>
             </View>
-            <TouchableOpacity className="absolute right-5">
+            <TouchableOpacity
+              className="absolute right-5"
+              onPress={() =>
+                router.push({
+                  pathname: "/teacher/[batchDetails]",
+                  params: {
+                    _id: item._id,
+                    name: item.name,
+                    organizationName: item.Organization.name,
+                    batchJoiningCode: item.batchJoiningCode,
+                    studentCount: item.studentCount,
+                  },
+                })
+              }
+            >
               <Ionicons name="arrow-forward-circle" size={30} color="white" />
             </TouchableOpacity>
           </View>
