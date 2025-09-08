@@ -1,26 +1,17 @@
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  Pressable,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import useTeacherHook from "@/hooks/UseTeacherHook";
 import { BatchForTeacherType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import SearchBar from "../shared/SearchBar";
 
-const BatchFlatList = () => {
-  const [BatchList, setBatchList] = useState<BatchForTeacherType[]>([]);
+const BatchFlatList = ({
+  BatchList,
+  getBatchList,
+}: {
+  BatchList: BatchForTeacherType[];
+  getBatchList: () => Promise<void>;
+}) => {
   const [searchInput, setSearchInput] = useState("");
-  const { getListOfAllBatches } = useTeacherHook();
-  const getBatchList = async () => {
-    const batches = await getListOfAllBatches();
-    setBatchList(batches);
-  };
   useEffect(() => {
     BatchList.length === 0 && getBatchList();
   }, [BatchList]);

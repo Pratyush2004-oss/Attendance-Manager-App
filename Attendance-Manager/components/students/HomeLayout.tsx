@@ -24,7 +24,7 @@ const HomeLayout = () => {
             data={item.options}
             renderItem={({ item }) => (
               <TouchableOpacity
-                className="items-center p-4 mr-3 shadow-lg min-w-40 bg-blue-500/70 rounded-xl"
+                className="items-center w-[11.5rem] p-4 mr-3 shadow-lg bg-blue-500/70 rounded-xl"
                 onPress={() => {
                   router.push(item.href as any);
                 }}
@@ -41,7 +41,7 @@ const HomeLayout = () => {
                     color="white"
                   />
                 </View>
-                <Text className="text-lg font-medium text-center text-white text-wrap">
+                <Text className="font-medium text-center text-white text-wrap">
                   {item.title}
                 </Text>
               </TouchableOpacity>

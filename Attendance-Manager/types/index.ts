@@ -32,6 +32,11 @@ export type UserType = {
   };
 };
 
+export type CreateBatchInputType = {
+  name: string;
+  Organization: string
+}
+
 export type BatchForStudentType = {
   _id: string;
   name: string;

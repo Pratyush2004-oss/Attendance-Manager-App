@@ -12,11 +12,13 @@ import {
   View,
 } from "react-native";
 import SearchBar from "../shared/SearchBar";
+import { useRouter } from "expo-router";
 
 const BatchFlatList = () => {
   const [BatchList, setBatchList] = useState<BatchForStudentType[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const { getListOfAllBatches } = useStudentHook();
+  const router = useRouter();
   const getBatchList = async () => {
     const batches = await getListOfAllBatches();
     setBatchList(batches);
@@ -89,7 +91,17 @@ const BatchFlatList = () => {
                 </Text>
               </Text>
             </View>
-            <TouchableOpacity className="absolute right-5">
+            <TouchableOpacity
+              className="absolute right-5"
+              onPress={() =>
+                router.push({
+                  pathname: "/students/[batchId]",
+                  params: {
+                    batchId: item._id,
+                  },
+                })
+              }
+            >
               <Ionicons name="arrow-forward-circle" size={30} color="white" />
             </TouchableOpacity>
           </View>

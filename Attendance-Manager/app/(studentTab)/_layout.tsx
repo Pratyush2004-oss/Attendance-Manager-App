@@ -25,7 +25,7 @@ const StudentTabLayout = () => {
             backgroundColor: "white",
             borderTopWidth: 1,
             borderTopColor: "#E1E8ED",
-            height: insets.bottom + 40,
+            height: insets.bottom + 50
           },
         }}
       >

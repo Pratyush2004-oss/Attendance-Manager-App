@@ -4,7 +4,14 @@ module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        // This sets 'Outfit' as the default font for the 'font-sans' utility
+        sans: ['Outfit_400Regular', 'sans-serif'],
+        // You can add other weights or styles as needed
+        'sans-bold': ['Outfit_700Bold'],
+      },
+    },
   },
   plugins: [],
 };

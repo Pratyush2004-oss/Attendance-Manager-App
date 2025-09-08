@@ -25,7 +25,7 @@ const TeacherTabLayout = () => {
             backgroundColor: "white",
             borderTopWidth: 1,
             borderTopColor: "#E1E8ED",
-            height: 40 + insets.bottom,
+            height: 50 + insets.bottom,
           },
         }}
       >

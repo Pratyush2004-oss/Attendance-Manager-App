@@ -14,6 +14,9 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     }
   }, [isCheckingAuth, isAuthenticated, checkAuth]);
   const isAuthScreen = segment[0] === "(auth)";
+  const isStudentScreen =
+    segment[0] === "students" || segment[0] === "(studentTab)";
+  const isTeacherScreen = segment[0] === "(teacherTab)";
 
   if (isCheckingAuth) {
     return <LoadingScreen />;
@@ -27,6 +30,10 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     isAuthenticated
   ) {
     return <Redirect href={"/(teacherTab)"} />;
+  } else if (isStudentScreen && user?.role === "teacher") {
+    return <Redirect href={"/(teacherTab)"} />;
+  } else if (isTeacherScreen && user?.role === "student") {
+    return <Redirect href={"/(studentTab)"} />;
   }
 
   return <View className="flex-1">{children}</View>;

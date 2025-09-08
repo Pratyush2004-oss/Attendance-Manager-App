@@ -107,6 +107,11 @@ const AllBatchFlatList = () => {
             )}
           </TouchableOpacity>
         )}
+        ListFooterComponent={() => (
+          <View className="items-center px-5 py-2">
+            <Text className="text-lg">Press and Hold the Batch to Join</Text>
+          </View>
+        )}
       />
     </>
   );
