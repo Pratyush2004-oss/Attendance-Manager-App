@@ -73,6 +73,7 @@ export type BatchForTeacherType = {
 };
 
 export type StudentType = {
+  _id: string;
   name: string;
   email: string;
   guardian: {

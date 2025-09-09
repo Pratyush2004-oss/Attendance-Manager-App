@@ -4,11 +4,16 @@ import UserModel from "../models/auth.model.js";
 import mongoose from "mongoose";
 import AttendanceModel from "../models/attendance.model.js";
 
-// get-student list of the Organization for the teacher so that they can add students to the batch
+// get-student list of the Organization same as batchId 
 export const getAllStudentList = expressasyncHandler(async (req, res, next) => {
     try {
+        const { batchId } = req.params;
         const user = req.user;
-        const students = await UserModel.find({ role: "student", isVerified: true, Organization: { $in: user.Organization } }).select("_id name email guardian");
+        const batch = await BatchModel.findById(batchId);
+        if (!batch) {
+            return res.status(404).json({ message: "Batch not found" });
+        }
+        const students = await UserModel.find({ role: "student", isVerified: true, Organization: { $in: user.Organization }, _id: { $nin: batch.students } }).select("_id name email").sort({ name: 1 });
         return res.status(200).json({ students });
     } catch (error) {
         console.log("Error in getAllStudentList controller: " + error);
@@ -281,7 +286,7 @@ export const getBatchByIdForTeacher = expressasyncHandler(async (req, res, next)
         const user = req.user;
         const batch = await BatchModel.findOne({ _id: batchId, teacherId: user._id, Organization: user.Organization })
             .select("students")
-            .populate("students", { _id: 1, name: 1, email: 1, guardian: 1, _id: 0 });
+            .populate("students", { _id: 1, name: 1, email: 1, guardian: 1, });
         return res.status(200).json({ batch });
     } catch (error) {
         console.log("Error in getBatchById controller: " + error);
