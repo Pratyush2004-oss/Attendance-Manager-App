@@ -4,7 +4,7 @@ import { addStudentsByTeacher, addStudentUsingCode, createBatch, deleteBatch, de
 
 const router = express.Router();
 
-router.get("/get-student-list", AuthMiddleware, VerifyTeacher, getAllStudentList);
+router.get("/get-student-list/:batchId", AuthMiddleware, VerifyTeacher, getAllStudentList);
 router.post('/get-sudent-by-id', AuthMiddleware, VerifyTeacher, getStudentById);
 router.get("/get-students-of-batch", AuthMiddleware, VerifyTeacher, getAllStudentsOfBatch);
 router.post("/get-batches-by-name", AuthMiddleware, VerifyStudent, getAllBatchesByName);
