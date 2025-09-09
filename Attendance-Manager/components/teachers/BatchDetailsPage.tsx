@@ -4,14 +4,14 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import BatchStudentList from "./BatchStudentList";
+import { useBatchStore } from "@/store/batch.store";
 const BatchDetailsPage = ({
-  params,
   StudentList,
 }: {
-  params: batchParamsType;
   StudentList: StudentType[];
 }) => {
-  return (
+  const {selectedBatch} = useBatchStore();
+  return selectedBatch && (
     <View className="flex-1">
       <BackHeader />
       <View className="relative flex-row items-center gap-3 px-5 py-5 bg-green-700/70">
@@ -25,26 +25,26 @@ const BatchDetailsPage = ({
           <Ionicons name="pencil-outline" size={24} color="white" />
         </TouchableOpacity>
         <View className="gap-1.5">
-          <Text className="text-3xl font-bold text-white">{params.name}</Text>
+          <Text className="text-3xl font-bold text-white">{selectedBatch.name}</Text>
           <Text className="text-2xl font-bold text-white">
-            ({params.organizationName})
+            ({selectedBatch.Organization.name})
           </Text>
           <Text className="text-xl font-medium text-white">
             Joining Code:{" "}
             <Text className="text-2xl font-black">
-              {params.batchJoiningCode}
+              {selectedBatch.batchJoiningCode}
             </Text>
           </Text>
           <Text className="text-lg font-medium text-white">
             Students:{" "}
             <Text className="text-xl font-extrabold">
-              {params.studentCount}
+              {selectedBatch.studentCount}
             </Text>
           </Text>
         </View>
       </View>
       {/* Students List */}
-      <BatchStudentList StudentList={StudentList} params={params} />
+      <BatchStudentList StudentList={StudentList} />
     </View>
   );
 };

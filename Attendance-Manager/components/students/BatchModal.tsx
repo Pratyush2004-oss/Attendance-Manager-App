@@ -56,7 +56,7 @@ const BatchModal = ({
       className="flex-1"
       transparent
     >
-      <View className="items-center justify-center flex-1 px-4">
+      <View className="items-center justify-center flex-1 px-4 bg-gray-500/70">
         <View className="relative items-center justify-center w-full gap-4 p-5 bg-white rounded-xl">
           <Image
             className="border-4 rounded-full size-32 aspect-square"

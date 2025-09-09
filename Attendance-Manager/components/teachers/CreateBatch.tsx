@@ -72,7 +72,7 @@ const CreateBatch = ({ refreshList }: { refreshList: () => Promise<void> }) => {
         className="flex-1"
         transparent
       >
-        <View className="items-center justify-center flex-1">
+        <View className="items-center justify-center flex-1 bg-gray-500/70">
           <View className="items-center justify-center w-5/6 gap-3 p-5 bg-white rounded-xl">
             <Pressable
               className="absolute top-5 right-5"

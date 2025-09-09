@@ -11,11 +11,11 @@ export const UserApis = {
 
 export const batchApis = {
   // teacher apis
-  getAllStudentList: `${BASE_URL}/api/batch/get-student-list`,
+  getAllStudentList: `${BASE_URL}/api/batch/get-student-list/:batchId`,
   createBatch: `${BASE_URL}/api/batch/create-batch`,
   get_Batches_for_Teacher: `${BASE_URL}/api/batch/get-batches-for-teacher`,
   get_Single_Batch_for_Teacher: `${BASE_URL}/api/batch/get-batch-By-id-for-teacher/:batchId`,
-  add_student_to_batch: `${BASE_URL}/api/batch/add-students-to-batch`,
+  add_students_to_batch: `${BASE_URL}/api/batch/add-students-to-batch`,
   delete_Student_from_Batch: `${BASE_URL}/api/batch/delete-student-from-batch`,
   deleteBatch: `${BASE_URL}/api/batch/delete-batch/:batchId`,
 

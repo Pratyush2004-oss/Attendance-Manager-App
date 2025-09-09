@@ -11,7 +11,7 @@ export const getAllStudentList = expressasyncHandler(async (req, res, next) => {
         const user = req.user;
         const batch = await BatchModel.findById(batchId);
         if (!batch) {
-            return res.status(404).json({ message: "Batch not found" });
+            return res.status(404).json({ error: "Batch not found" });
         }
         const students = await UserModel.find({ role: "student", isVerified: true, Organization: { $in: user.Organization }, _id: { $nin: batch.students } }).select("_id name email").sort({ name: 1 });
         return res.status(200).json({ students });

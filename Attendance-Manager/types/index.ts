@@ -69,7 +69,12 @@ export type BatchForTeacherType = {
   };
   batchJoiningCode: string | null;
   studentCount: number;
-  students: StudentType[] | null;
+};
+
+export type Student = {
+  _id: string;
+  name: string;
+  email: string;
 };
 
 export type StudentType = {
@@ -82,13 +87,18 @@ export type StudentType = {
   };
 };
 
+export type Add_To_BatchInputType = {
+  batchId: string;
+  studentId: string[];
+};
+
 export type BatchdetailType = {
   _id: string;
   students: StudentType[];
-}
+};
 
 export type batchParamsType = {
-  _id: string
+  _id: string;
   name: string;
   organizationName: string;
   batchJoiningCode: string;

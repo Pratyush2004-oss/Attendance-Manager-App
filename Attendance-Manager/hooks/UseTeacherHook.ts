@@ -1,6 +1,6 @@
-import { batchApis, UserApis } from "@/assets/constants";
+import { batchApis } from "@/assets/constants";
 import { useUserStore } from "@/store/userStore";
-import { CreateBatchInputType } from "@/types";
+import { Add_To_BatchInputType, CreateBatchInputType } from "@/types";
 import axios from "axios";
 import { Alert } from "react-native";
 
@@ -59,10 +59,46 @@ const useTeacherHook = () => {
     } catch (error) {}
   };
 
+  const getStudentList = async (batchId: string) => {
+    try {
+      const students = await axios.get(
+        batchApis.getAllStudentList.replace(":batchId", batchId),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (students.status === 400) throw new Error(students.data.error);
+      return students.data.students;
+    } catch (error) {}
+  };
+
+  const addStudentsToBatch = async (input: Add_To_BatchInputType) => {
+    try {
+      if (!input.batchId || !input.studentId || input.studentId.length === 0)
+        throw new Error("Please fill all the fields.");
+      const response = await axios.post(
+        batchApis.add_students_to_batch,
+        input,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 400) throw new Error(response.data.error);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {}
+  };
+
   return {
     getListOfAllBatches,
     createBatch,
     getBatchDetails,
+    getStudentList,
+    addStudentsToBatch,
   };
 };
 
