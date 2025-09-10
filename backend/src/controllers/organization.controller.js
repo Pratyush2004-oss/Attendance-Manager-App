@@ -1,5 +1,6 @@
 import expressAsyncHandler from "express-async-handler";
 import OrganizationModel from "../models/organization.model.js";
+import UserModel from "../models/auth.model.js";
 
 // create organization with admin emails
 export const createOrganization = expressAsyncHandler(async (req, res, next) => {
@@ -36,7 +37,8 @@ export const getAllTeachers = expressAsyncHandler(async (req, res, next) => {
         const user = req.user;
         const teachers = await UserModel
             .find({ role: "teacher", isVerified: true, Organization: { $in: user.Organization } })
-            .select("_id name email isTeacherVerified");
+            .select("_id name email isTeacherVerified")
+            .sort({ isTeacherVerified: -1 });
         return res.status(200).json({ teachers });
     } catch (error) {
         console.log("Error in getAllTeachers controller: " + error);
@@ -49,14 +51,17 @@ export const verifyTeacherAccount = expressAsyncHandler(async (req, res, next) =
     try {
         const { teacherId } = req.params;
         const user = req.user;
-        const teacher = await UserModel.findById(teacherId);
+        const teacher = await UserModel.findById(teacherId).populate("Organization", "name _id");
         if (!teacher) {
             return res.status(404).json({ message: "Teacher not found" });
         }
 
-        // check whether your organization and teacher organization are same
-        if (!user.Organization.includes(teacher.Organization)) {
-            return res.status(401).json({ message: "Unauthorized, access denied" });
+        // check whether the Organization fo the teacher is as same as the Organization of the admin
+        const isSubset = user.Organization.every(org => teacher.Organization.some(userOrg => userOrg._id.equals(org._id)))
+            || teacher.Organization.every(org => user.Organization.some(teacherOrg => teacherOrg._id.equals(org._id)));
+
+        if (!isSubset) {
+            return res.status(400).json({ message: "Unauthorized, access denied" });
         }
 
         // check whether the teacher is already verified
@@ -83,16 +88,24 @@ export const removeTeacherFromOrganization = expressAsyncHandler(async (req, res
             return res.status(404).json({ message: "Teacher not found" });
         }
 
-        // check whether your organization and teacher organization are same
-        if (!user.Organization.includes(teacher.Organization)) {
-            return res.status(401).json({ message: "Unauthorized, access denied" });
+        // check whether the Organization fo the teacher is as same as the Organization of the admin
+        const isSubset = user.Organization.every(org => teacher.Organization.some(userOrg => userOrg._id.equals(org._id)))
+            || teacher.Organization.every(org => user.Organization.some(teacherOrg => teacherOrg._id.equals(org._id)));
+
+        if (!isSubset) {
+            return res.status(400).json({ message: "Unauthorized, access denied" });
+        }
+
+        if (teacher.Organization.length === 1) {
+            await teacher.deleteOne();
+            return res.status(200).json({ message: "Teacher deleted successfully from the Organization" });
         }
 
         // remove the ORganization di fromm the ORganization array of the teacher
         teacher.Organization.pull(user.Organization);
         await teacher.save();
 
-        return res.status(200).json({ message: "Teacher deleted successfully" });
+        return res.status(200).json({ message: "Teacher deleted successfully from the Organization" });
     } catch (error) {
         console.log("Error in deleteTeacher controller: " + error);
         next(error);
