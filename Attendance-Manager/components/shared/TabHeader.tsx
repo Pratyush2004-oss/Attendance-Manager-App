@@ -1,3 +1,4 @@
+import { useOrganizationStore } from "@/store/Organization.store";
 import { useUserStore } from "@/store/userStore";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -13,7 +14,7 @@ const TabHeader = ({
 }) => {
   const router = useRouter();
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const { logout } = useUserStore();
+  const { logout, isOrganizationAdmin } = useUserStore();
 
   const handleProfilePress = () => {
     setDropdownVisible(!dropdownVisible);
@@ -29,6 +30,7 @@ const TabHeader = ({
     setDropdownVisible(false);
     // Handle navigation or actions here
     if (option === "profile") router.push("/profile");
+    if (option === "Admin") router.push("/organization");
     if (option === "logout") handleLogout();
   };
   return (
@@ -66,6 +68,14 @@ const TabHeader = ({
             >
               <Text className="text-lg">Profile</Text>
             </TouchableOpacity>
+            {isOrganizationAdmin && (
+              <TouchableOpacity
+                className="px-4 py-2"
+                onPress={() => handleMenuOption("Admin")}
+              >
+                <Text className="text-lg">Admin</Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               className="px-4 py-2"
               onPress={() => handleMenuOption("logout")}

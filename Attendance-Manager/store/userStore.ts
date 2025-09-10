@@ -7,7 +7,7 @@ import {
 import { Alert } from "react-native";
 import { create } from "zustand";
 import axios from "axios";
-import { UserApis } from "@/assets/constants";
+import { OrganizationApis, UserApis } from "@/assets/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface UserStoreInterface {
@@ -82,6 +82,7 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
   },
   //   login controller
   login: async (userInput) => {
+    set({ isOrganizationAdmin: false, isAdmin: false });
     if (!userInput.email || !userInput.password) {
       Alert.alert("Error", "Please fill all the fields.");
       return;
@@ -95,6 +96,20 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
       const response = await axios.post(UserApis.loginUser, userInput);
       if (response.status === 400) throw new Error(response.data.message);
 
+      // check for Organization Admin Also
+      try {
+        const isAdmin = await axios.get(
+          OrganizationApis.checkOrganizationAdmin,
+          {
+            headers: {
+              Authorization: `Bearer ${response.data.token}`,
+            },
+          }
+        );
+        if (isAdmin.status === 400) throw new Error(isAdmin.data.error);
+        if (isAdmin.data.isAdmin) set({ isOrganizationAdmin: true });
+      } catch (error: any) {}
+
       // check for admin
       try {
         const responseAdmin = await axios.get(UserApis.checkAdmin, {
@@ -104,7 +119,8 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
         });
         if (responseAdmin.data.isAdmin) set({ isAdmin: true });
 
-        if (responseAdmin.status === 401) throw new Error(responseAdmin.data);
+        if (responseAdmin.status === 401)
+          throw new Error(responseAdmin.data.error);
       } catch (error) {}
 
       set({
@@ -124,7 +140,7 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
   },
   //   check auth controller
   checkAuth: async () => {
-    set({ isCheckingAuth: true });
+    set({ isCheckingAuth: true, isOrganizationAdmin: false, isAdmin: false });
     const token = await AsyncStorage.getItem("token");
     if (!token) {
       return set({
@@ -147,6 +163,17 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
       isAuthenticated: true,
       user: response.data.user,
     });
+
+    // check for Organization Admin
+    try {
+      const isAdmin = await axios.get(OrganizationApis.checkOrganizationAdmin, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (isAdmin.status === 400) throw new Error(isAdmin.data.error);
+      if (isAdmin.data.isAdmin) set({ isOrganizationAdmin: true });
+    } catch (error: any) {}
     // check for admin also
     try {
       const requireAdmin = await axios.get(UserApis.checkAdmin, {

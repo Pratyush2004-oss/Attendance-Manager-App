@@ -77,6 +77,13 @@ export type Student = {
   email: string;
 };
 
+export type Teacher = {
+  _id: string;
+  name: string;
+  email: string;
+  isVerifiedTeacher: boolean;
+};
+
 export type StudentType = {
   _id: string;
   name: string;

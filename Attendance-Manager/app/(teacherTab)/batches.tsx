@@ -9,8 +9,7 @@ const Batches = () => {
   const [BatchList, setBatchList] = useState<BatchForTeacherType[]>([]);
   const { getListOfAllBatches } = useTeacherHook();
   const getBatchList = async () => {
-    const batches = await getListOfAllBatches();
-    setBatchList(batches);
+    await getListOfAllBatches().then((res) => setBatchList(res));
   };
   return (
     <View className="flex-1">

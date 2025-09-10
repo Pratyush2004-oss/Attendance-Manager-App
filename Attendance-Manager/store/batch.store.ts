@@ -1,4 +1,4 @@
-import { BatchForTeacherType, Student } from "@/types";
+import { BatchForTeacherType } from "@/types";
 import { create } from "zustand";
 
 interface BatchStoreInterface {

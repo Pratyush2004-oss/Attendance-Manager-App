@@ -18,7 +18,7 @@ const BatchFlatList = ({
   const {setSelectedBatch} = useBatchStore();
   useEffect(() => {
     BatchList.length === 0 && getBatchList();
-  }, [BatchList]);
+  }, []);
   const filteredList = () => {
     return BatchList.filter((item) => {
       return (
