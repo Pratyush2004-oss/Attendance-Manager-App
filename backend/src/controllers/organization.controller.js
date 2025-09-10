@@ -105,11 +105,11 @@ export const isOrganizationAdmin = expressAsyncHandler(async (req, res, next) =>
         const user = req.user;
         const organization = await OrganizationModel.findById(user.Organization);
         if (!organization) {
-            return res.status(401).json({ message: "Unauthorized, Organization not found" });
+            return res.status(401).json({ error: "Unauthorized, Organization not found" });
         }
         const isAdmin = organization.adminIds.includes(user.email);
         if (!isAdmin) {
-            return res.status(401).json({ message: "Unauthorized, access denied" });
+            return res.status(401).json({ error: "Unauthorized, access denied" });
         }
         res.status(200).json({ isAdmin });
     } catch (error) {
