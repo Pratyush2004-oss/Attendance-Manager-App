@@ -73,8 +73,8 @@ export const verifyTeacherAccount = expressAsyncHandler(async (req, res, next) =
     }
 })
 
-// delete teacher account
-export const deleteTeacherAccount = expressAsyncHandler(async (req, res, next) => {
+// remove the teacher account from the Organization
+export const removeTeacherFromOrganization = expressAsyncHandler(async (req, res, next) => {
     try {
         const { teacherId } = req.params;
         const user = req.user;
@@ -88,8 +88,9 @@ export const deleteTeacherAccount = expressAsyncHandler(async (req, res, next) =
             return res.status(401).json({ message: "Unauthorized, access denied" });
         }
 
-        // delete the account from the database
-        await teacher.remove();
+        // remove the ORganization di fromm the ORganization array of the teacher
+        teacher.Organization.pull(user.Organization);
+        await teacher.save();
 
         return res.status(200).json({ message: "Teacher deleted successfully" });
     } catch (error) {
