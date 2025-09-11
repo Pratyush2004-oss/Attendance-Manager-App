@@ -286,7 +286,7 @@ export const checkAuth = expressAsyncHandler(async (req, res, next) => {
     try {
         const user = req.user;
         if (!user) {
-            return res.status(401).json({ message: "Unauthorized, user not found" });
+            return res.status(401).json({ error: "Unauthorized, user not found" });
         }
         res.status(200).json({
             message: "Authorized",
@@ -311,7 +311,7 @@ export const checkAdmin = expressAsyncHandler(async (req, res, next) => {
     try {
         const user = req.user;
         if (!user) {
-            return res.status(401).json({ message: "Unauthorized, user not found" });
+            return res.status(401).json({ error: "Unauthorized, user not found" });
         }
         res.status(200).json({ message: "Admin Authorized", isAdmin: true });
     } catch (error) {

@@ -81,7 +81,7 @@ export type Teacher = {
   _id: string;
   name: string;
   email: string;
-  isVerifiedTeacher: boolean;
+  isTeacherVerified: boolean;
 };
 
 export type StudentType = {
