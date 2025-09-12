@@ -8,13 +8,20 @@ import AttendanceModel from "../models/attendance.model.js";
 export const getAllStudentList = expressasyncHandler(async (req, res, next) => {
     try {
         const { batchId } = req.params;
-        const user = req.user;
         const batch = await BatchModel.findById(batchId);
         if (!batch) {
             return res.status(404).json({ error: "Batch not found" });
         }
-        const students = await UserModel.find({ role: "student", isVerified: true, Organization: { $in: user.Organization }, _id: { $nin: batch.students } }).select("_id name email").sort({ name: 1 });
-        return res.status(200).json({ students });
+        // get all the student List which are in the Organization of the teacher, but not in the batch
+        const students = await UserModel.find({
+            role: "student",
+            isVerified: true,
+            Organization: batch.Organization,
+            _id: { $nin: batch.students }
+        }).select("_id name email").sort({ createdAt: 1 });
+        return res.status(200).json({
+            students
+        })
     } catch (error) {
         console.log("Error in getAllStudentList controller: " + error);
         next(error);
@@ -113,40 +120,40 @@ export const addStudentsByTeacher = expressasyncHandler(async (req, res, next) =
         const { batchId, studentIds } = req.body;
 
         if (!batchId) {
-            return res.status(400).json({ message: "Batch ID is required" });
+            return res.status(400).json({ error: "Batch ID is required" });
         }
 
         if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
-            return res.status(400).json({ message: "At least one student ID is required" });
+            return res.status(400).json({ error: "At least one student ID is required" });
         }
 
         const batch = await BatchModel.findById(batchId);
 
         if (!batch) {
-            return res.status(404).json({ message: "Batch not found" });
+            return res.status(404).json({ error: "Batch not found" });
         }
 
         if (batch.teacherId.toString() !== user._id.toString()) {
-            return res.status(403).json({ message: "You are not authorized to add students to this batch" });
+            return res.status(403).json({ error: "You are not authorized to add students to this batch" });
         }
 
         // check for the students who have same OrganizationIds as batch
-
-
-        for (const studentId in studentIds) {
-            if (mongoose.Types.ObjectId.isValid(studentIds[studentId])) {
-                const objectId = new mongoose.Types.ObjectId(studentIds[studentId]);
-                const student = await UserModel.findById(objectId);
-                if (student) {
-                    if (student.role === "student" && student.isVerified && student.Organization.includes(batch.Organization)) {
-                        if (!batch.students.includes(student._id)) {
-                            batch.students.push(student._id);
-                        }
-                    }
-                }
-            } else {
+        for (let studentId in studentIds) {
+            if (!mongoose.Types.ObjectId.isValid(studentIds[studentId])) {
                 continue;
             }
+            const objectId = new mongoose.Types.ObjectId(studentIds[studentId]);
+            const student = await UserModel.findById(objectId);
+            if (!student) {
+                continue;
+            }
+            if (!(student.role === "student" && student.isVerified && student.Organization.includes(batch.Organization))) {
+                continue;
+            }
+            if (batch.students.includes(student._id)) {
+                continue;
+            }
+            batch.students.push(student._id);
         }
 
         await batch.save();
