@@ -96,8 +96,13 @@ export type StudentType = {
 
 export type Add_To_BatchInputType = {
   batchId: string;
-  studentId: string[];
+  studentIds: string[];
 };
+
+export type removeStudentFromBatchInputType = {
+  batchId: string;
+  studentId: string;
+}
 
 export type BatchdetailType = {
   _id: string;

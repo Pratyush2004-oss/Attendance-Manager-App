@@ -30,7 +30,6 @@ export const useOrganizationStore = create<OrganizationStoreInterface>(
           },
         });
         if (teachers.status === 400) throw new Error(teachers.data.error);
-        console.log(teachers.data.teachers)
         set({ teachers: teachers.data.teachers });
       } catch (error) {
       } finally {
@@ -40,7 +39,6 @@ export const useOrganizationStore = create<OrganizationStoreInterface>(
     verifyTeacher: async (teacherId, token) => {
       if (!token || !teacherId) return;
       try {
-        set({ isLoading: true });
         const response = await axios.get(
           OrganizationApis.verifyTeacher.replace(":teacherId", teacherId),
           {
@@ -50,18 +48,16 @@ export const useOrganizationStore = create<OrganizationStoreInterface>(
           }
         );
         if (response.status === 400) throw new Error(response.data.error);
+        Alert.alert("Success", response.data.message);
         await get().getAllTeachers(token);
       } catch (error: any) {
         if (error.isAxiosError) Alert.alert("Error", error.response.data.error);
         else Alert.alert("Error", error.message);
-      } finally {
-        set({ isLoading: false });
-      }
+      } 
     },
     deleteTeacherFromOrganization: async (teacherId, token) => {
       if (!token || !teacherId) return;
       try {
-        set({ isLoading: true });
         const response = await axios.delete(
           OrganizationApis.deleteTeacher.replace(":teacherId", teacherId),
           {
@@ -71,12 +67,11 @@ export const useOrganizationStore = create<OrganizationStoreInterface>(
           }
         );
         if (response.status === 400) throw new Error(response.data.error);
+        Alert.alert("Success", response.data.message);
         await get().getAllTeachers(token);
       } catch (error: any) {
         if (error.isAxiosError) Alert.alert("Error", error.response.data.error);
         else Alert.alert("Error", error.message);
-      } finally {
-        set({ isLoading: false });
       }
     },
   })

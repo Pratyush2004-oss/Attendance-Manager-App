@@ -1,23 +1,20 @@
 import BatchDetailsPage from "@/components/teachers/BatchDetailsPage";
-import useTeacherHook from "@/hooks/UseTeacherHook";
 import { useBatchStore } from "@/store/batch.store";
-import { StudentType } from "@/types";
-import React, { useEffect, useState } from "react";
+import { useUserStore } from "@/store/userStore";
+import React, { useEffect } from "react";
 
 const BatchDetails = () => {
   const { selectedBatch } = useBatchStore();
-  const [StudentList, setStudentList] = useState<StudentType[]>([]);
-  const { getBatchDetails } = useTeacherHook();
+  const { token } = useUserStore();
+  const { getBatchStudents } = useBatchStore();
   const fetchStudents = async () => {
     if (!selectedBatch) return;
-    await getBatchDetails(selectedBatch._id).then((res) => {
-      setStudentList(res.students);
-    });
+    await getBatchStudents(selectedBatch._id, token as string);
   };
   useEffect(() => {
-    selectedBatch && selectedBatch.studentCount !== 0 && fetchStudents();
+    fetchStudents();
   }, [selectedBatch]);
-  return selectedBatch && <BatchDetailsPage StudentList={StudentList} />;
+  return selectedBatch && <BatchDetailsPage />;
 };
 
 export default BatchDetails;

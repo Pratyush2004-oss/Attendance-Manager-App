@@ -158,7 +158,7 @@ export const addStudentsByTeacher = expressasyncHandler(async (req, res, next) =
 
         await batch.save();
 
-        return res.status(200).json({ message: "All Valid Students added to batch successfully, Invalid enteries are ignored", batch });
+        return res.status(200).json({ message: "Students added to batch successfully", batch });
 
     } catch (error) {
         console.log("Error in addStudentsByTeacher controller: " + error);
@@ -227,23 +227,23 @@ export const deleteStudentFromBatch = expressasyncHandler(async (req, res, next)
         const batchToUpdate = await BatchModel.findById(batchId);
 
         if (!batchToUpdate) {
-            return res.status(404).json({ message: "Batch not found" });
+            return res.status(404).json({ error: "Batch not found" });
         }
 
         const student = await UserModel.findById(studentId);
 
         if (!student) {
-            return res.status(404).json({ message: "Student not found" });
+            return res.status(404).json({ error: "Student not found" });
         }
 
         // check the user is actually the teacher of that batch
         if (batchToUpdate.teacherId.toString() !== user._id.toString()) {
-            return res.status(403).json({ message: "You are not authorized to delete students from this batch" });
+            return res.status(403).json({ error: "You are not authorized to delete students from this batch" });
         }
 
         // check whether the student is in the batch actually
         if (!batchToUpdate.students.includes(studentId)) {
-            return res.status(404).json({ message: "Student not found in the batch" });
+            return res.status(404).json({ error: "Student not found in the batch" });
         }
 
         // todo: update all the attendance of the student for the perticular batch

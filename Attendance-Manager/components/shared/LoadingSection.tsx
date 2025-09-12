@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const AddStudentsModal = () => {
+const LoadingSection = () => {
   return (
     <View>
-      <Text>AddStudentsModal</Text>
+      <Text>LoadingSection</Text>
     </View>
   )
 }
 
-export default AddStudentsModal
+export default LoadingSection

@@ -1,4 +1,4 @@
-import { batchParamsType, StudentType } from "@/types";
+import { useBatchStore } from "@/store/batch.store";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
@@ -10,23 +10,22 @@ import {
   View,
 } from "react-native";
 import AddToBatchModal from "./AddToBatchModal";
-import { useBatchStore } from "@/store/batch.store";
 
-const BatchStudentList = ({ StudentList }: { StudentList: StudentType[] }) => {
+const BatchStudentList = () => {
   const [showModal, setshowModal] = useState(false);
-  const { selectedBatch } = useBatchStore();
+  const { selectedBatch, batchStudentList } = useBatchStore();
   return (
     selectedBatch && (
       <>
         <FlatList
-          data={StudentList}
+          data={batchStudentList}
           keyExtractor={(item) => item._id}
           className="flex-1 bg-gray-200"
           contentContainerStyle={{ paddingBottom: 20 }}
           ListHeaderComponent={() => (
             <View className="flex-row items-center justify-between p-2 bg-gray-200 border-b-2 px-7">
               <Text className="text-3xl font-bold">
-                Students ({selectedBatch.studentCount})
+                Students ({batchStudentList.length})
               </Text>
               <TouchableOpacity
                 className="p-1 rounded-full bg-blue-500/70"

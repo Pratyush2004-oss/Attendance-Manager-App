@@ -25,7 +25,7 @@ const StudentTabLayout = () => {
             backgroundColor: "white",
             borderTopWidth: 1,
             borderTopColor: "#E1E8ED",
-            height: insets.bottom + 50
+            height: insets.bottom + 50,
           },
         }}
       >
@@ -45,7 +45,7 @@ const StudentTabLayout = () => {
           options={{
             title: "Batches",
             tabBarIcon: ({ color, size }) => (
-              <AntDesign name="barchart" color={color} size={size} />
+              <AntDesign name="bar-chart" color={color} size={size} />
             ),
           }}
         />

@@ -14,9 +14,7 @@ const useTeacherHook = () => {
         },
       });
       return batches.data.batchDetails;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const createBatch = async (input: CreateBatchInputType) => {
@@ -44,7 +42,7 @@ const useTeacherHook = () => {
     }
   };
 
-  const getBatchDetails = async (batchId: string) => {
+  const getBatchStudents = async (batchId: string) => {
     try {
       const batchDetails = await axios.get(
         batchApis.get_Single_Batch_for_Teacher.replace(":batchId", batchId),
@@ -76,7 +74,7 @@ const useTeacherHook = () => {
 
   const addStudentsToBatch = async (input: Add_To_BatchInputType) => {
     try {
-      if (!input.batchId || !input.studentId || input.studentId.length === 0)
+      if (!input.batchId || !input.studentIds || input.studentIds.length === 0)
         throw new Error("Please fill all the fields.");
       const response = await axios.post(
         batchApis.add_students_to_batch,
@@ -88,15 +86,17 @@ const useTeacherHook = () => {
         }
       );
       if (response.status === 400) throw new Error(response.data.error);
-      console.log(response.data);
-      return response.data;
-    } catch (error) {}
+
+      return response.data.message;
+    } catch (error: any) {
+      if (error.isAxiosError) Alert.alert("Error", error.response.data.error);
+    }
   };
 
   return {
     getListOfAllBatches,
     createBatch,
-    getBatchDetails,
+    getBatchStudents,
     getStudentList,
     addStudentsToBatch,
   };

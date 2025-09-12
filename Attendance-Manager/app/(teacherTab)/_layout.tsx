@@ -45,7 +45,7 @@ const TeacherTabLayout = () => {
           options={{
             title: "Batches",
             tabBarIcon: ({ color, size }) => (
-              <AntDesign name="barchart" color={color} size={size} />
+              <AntDesign name="bar-chart" color={color} size={size} />
             ),
           }}
         />

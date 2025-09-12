@@ -2,7 +2,7 @@ import { BatchForTeacherType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import SearchBar from "../shared/SearchBar";
 import { useBatchStore } from "@/store/batch.store";
 
@@ -81,7 +81,7 @@ const BatchFlatList = ({
                 </Text>
               </Text>
             </View>
-            <TouchableOpacity
+            <Pressable
               className="absolute right-5"
               onPress={() => {
                 setSelectedBatch(item);
@@ -89,7 +89,7 @@ const BatchFlatList = ({
               }}
             >
               <Ionicons name="arrow-forward-circle" size={30} color="white" />
-            </TouchableOpacity>
+            </Pressable>
           </View>
         )}
       />
