@@ -288,7 +288,7 @@ export const getAllBatchesForTeacher = expressasyncHandler(async (req, res, next
         const user = req.user;
         // Extract organization ObjectIds from user.Organization array
         const userOrganizationIds = user.Organization.map(org =>
-            typeof org.name === "object" ? org.name : mongoose.Types.ObjectId(org.name)
+            typeof org._id === "object" ? org._id : mongoose.Types.ObjectId(org._id)
         );
 
         // Aggregation pipeline:
@@ -298,7 +298,7 @@ export const getAllBatchesForTeacher = expressasyncHandler(async (req, res, next
         const batches = await BatchModel.aggregate([
             {
                 $match: {
-                    teacherId: mongoose.Types.ObjectId(user._id),
+                    teacherId: new mongoose.Types.ObjectId(user._id),
                     Organization: { $in: userOrganizationIds }
                 }
             },
