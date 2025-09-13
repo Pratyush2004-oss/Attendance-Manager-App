@@ -129,7 +129,7 @@ export const addStudentsByTeacher = expressasyncHandler(async (req, res, next) =
             if (!student) {
                 continue;
             }
-            if (!(student.role === "student" && student.isVerified && student.Organization.includes(batch.Organization))) {
+            if (!(student.role === "student" && student.isVerified && student.Organization.find(org => org.name.toString() === batch.Organization.toString()))) {
                 continue;
             }
             if (batch.students.includes(student._id)) {
@@ -167,9 +167,10 @@ export const addStudentUsingCode = expressasyncHandler(async (req, res, next) =>
         }
 
         // check if the student and batch are in the same organization
-        if (!user.Organization.some((org) => org.equals(batch.Organization))) {
-            return res.status(400).json({ error: "You are not authorized to join this batch" });
+        if(user.find(org => org.name.toString() === batch.Organization.toString())) {
+            return res.status(400).json({ error: "You are not a student of this batch" });
         }
+
 
         if (batch.students.includes(user._id)) {
             return res.status(400).json({ error: "You are already a student of this batch" });
@@ -338,7 +339,7 @@ export const getBatchByIdForTeacher = expressasyncHandler(async (req, res, next)
         // Aggregation pipeline:
         // 1. $match: Find the batch by _id and teacherId
         // 2. $lookup: Populate student details
-        // 3. $project: Format output
+        // 3. $project: Only student list with basic details
         const batches = await BatchModel.aggregate([
             {
                 $match: {
@@ -351,20 +352,23 @@ export const getBatchByIdForTeacher = expressasyncHandler(async (req, res, next)
                     from: "users",
                     localField: "students",
                     foreignField: "_id",
-                    as: "studentDetails"
+                    as: "studentList"
                 }
             },
             {
                 $project: {
-                    _id: 1,
-                    name: 1,
                     students: {
-                        _id: 1,
-                        name: 1,
-                        email: 1,
-                        guardian: 1
-                    },
-                    studentDetails: 1
+                        $map: {
+                            input: "$studentList",
+                            as: "student",
+                            in: {
+                                _id: "$$student._id",
+                                name: "$$student.name",
+                                email: "$$student.email",
+                                guardian: "$$student.guardian"
+                            }
+                        }
+                    }
                 }
             }
         ]);
@@ -373,8 +377,8 @@ export const getBatchByIdForTeacher = expressasyncHandler(async (req, res, next)
             return res.status(404).json({ message: "Batch not found or you are not authorized" });
         }
 
-        // Return batch info and populated student details
-        return res.status(200).json({ batch: batches[0] });
+        // Return only the student list
+        return res.status(200).json({ students: batches[0].students });
     } catch (error) {
         console.log("Error in getBatchByIdForTeacher controller: " + error);
         next(error);
