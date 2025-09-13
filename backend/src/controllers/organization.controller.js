@@ -103,6 +103,7 @@ export const getAllTeachersofOrganization = expressAsyncHandler(async (req, res,
                     name: 1,
                     email: 1,
                     organization: {
+                        _id: "$Organization._id",
                         isTeacherVerified: "$Organization.isTeacherVerified"
                     }
                 }

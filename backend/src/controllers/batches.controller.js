@@ -15,18 +15,20 @@ export const getAllStudentList = expressasyncHandler(async (req, res, next) => {
         }
 
         // Aggregation pipeline:
-        // 1. $match: Students who are verified, have the same organization as the batch, and are not in the batch
-        // 2. $project: Only select _id, name, email
         const students = await UserModel.aggregate([
             {
+                // 1. $match: Students who are verified, have the same organization as the batch, and are not in the batch
                 $match: {
                     role: "student",
                     isVerified: true,
-                    "Organization._id": batch.Organization,
+                    Organization: {
+                        $elemMatch: { name: batch.Organization }
+                    },
                     _id: { $nin: batch.students }
                 }
             },
             {
+                // 2. $project: Only select _id, name, email
                 $project: {
                     _id: 1,
                     name: 1,
