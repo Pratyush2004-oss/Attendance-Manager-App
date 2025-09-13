@@ -359,7 +359,7 @@ export const getAllBatchesForStudent = expressasyncHandler(async (req, res, next
         const batches = await BatchModel.aggregate([
             {
                 $match: {
-                    students: mongoose.Types.ObjectId(user._id)
+                    students: { $in: new mongoose.Types.ObjectId(user._id) }
                 }
             },
             {
