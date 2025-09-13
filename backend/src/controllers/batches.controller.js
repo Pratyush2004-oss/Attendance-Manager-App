@@ -442,21 +442,18 @@ export const getAllBatchesofOrganization = expressasyncHandler(async (req, res, 
         const user = req.user;
         // Extract organization ObjectIds from user.Organization array
         const userOrganizationIds = user.Organization.map(org =>
-            typeof org._id === "object" ? org._id : new mongoose.Types.ObjectId(org._id)
+            typeof org._id === "object" ? org._id : mongoose.Types.ObjectId(org._id)
         );
 
         // Aggregation pipeline:
         // 1. $match: Find batches where Organization is in user's organizations and user is a student
-        // 2. $lookup: Populate Organization details
-        // 3. $lookup: Populate teacher details
-        // 4. $project: Format output and add isStudent flag
         const batches = await BatchModel.aggregate([
             {
                 $match: {
-                    Organization: { $in: userOrganizationIds },
-                    students: new mongoose.Types.ObjectId(user._id)
+                    Organization: { $in: userOrganizationIds }
                 }
             },
+            // 2. $lookup: Populate Organization details
             {
                 $lookup: {
                     from: "organizations",
@@ -468,6 +465,7 @@ export const getAllBatchesofOrganization = expressasyncHandler(async (req, res, 
             {
                 $unwind: "$organizationDetails"
             },
+            // 3. $lookup: Populate teacher details
             {
                 $lookup: {
                     from: "users",
@@ -480,11 +478,12 @@ export const getAllBatchesofOrganization = expressasyncHandler(async (req, res, 
                 $unwind: "$teacherDetails"
             },
             {
+                // 4. $project: Format output and add isStudent flag
                 $project: {
                     _id: 1,
                     name: 1,
-                    organization: "$organizationDetails.name",
-                    teacher: "$teacherDetails.name",
+                    Organization: { name: "$organizationDetails.name" },
+                    teacherId: { name: "$teacherDetails.name" },
                     isStudent: {
                         $in: [new mongoose.Types.ObjectId(user._id), "$students"]
                     }
