@@ -13,41 +13,37 @@ export const getAllStudentList = expressasyncHandler(async (req, res, next) => {
         if (!batch) {
             return res.status(404).json({ error: "Batch not found" });
         }
-        // get all the student List which are in the Organization of the teacher, but not in the batch
-        const students = await UserModel.find({
-            role: "student",
-            isVerified: true,
-            Organization: batch.Organization,
-            _id: { $nin: batch.students }
-        }).select("_id name email").sort({ createdAt: 1 });
-        return res.status(200).json({
-            students
-        })
+
+        // Aggregation pipeline:
+        // 1. $match: Students who are verified, have the same organization as the batch, and are not in the batch
+        // 2. $project: Only select _id, name, email
+        const students = await UserModel.aggregate([
+            {
+                $match: {
+                    role: "student",
+                    isVerified: true,
+                    "Organization._id": batch.Organization,
+                    _id: { $nin: batch.students }
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    email: 1
+                }
+            },
+            {
+                $sort: { createdAt: 1 }
+            }
+        ]);
+
+        return res.status(200).json({ students });
     } catch (error) {
         console.log("Error in getAllStudentList controller: " + error);
         next(error);
     }
-})
-
-// get all students of the perticular batch only by its teacher
-export const getAllStudentsOfBatch = expressasyncHandler(async (req, res, next) => {
-    try {
-        const user = req.user;
-        const { batchId } = req.params;
-
-        const batch = await BatchModel.findOne({ _id: batchId, teacherId: user._id })
-            .populate("studentIds", "name email guardian _id")
-            .populate("teacherId", "name email _id");
-        if (!batch) {
-            return res.status(404).json({ message: "Batch not found" });
-        }
-        return res.status(200).json({ batch });
-
-    } catch (error) {
-        console.log("Error in getAllStudentsOfBatch controller: " + error);
-        next(error);
-    }
-})
+});
 
 // create batch
 export const createBatch = expressasyncHandler(async (req, res, next) => {
@@ -336,15 +332,52 @@ export const getBatchByIdForTeacher = expressasyncHandler(async (req, res, next)
     try {
         const { batchId } = req.params;
         const user = req.user;
-        const batch = await BatchModel.findOne({ _id: batchId, teacherId: user._id })
-            .select("students")
-            .populate("students", { _id: 1, name: 1, email: 1, guardian: 1, });
-        return res.status(200).json({ batch });
+
+        // Aggregation pipeline:
+        // 1. $match: Find the batch by _id and teacherId
+        // 2. $lookup: Populate student details
+        // 3. $project: Format output
+        const batches = await BatchModel.aggregate([
+            {
+                $match: {
+                    _id: new mongoose.Types.ObjectId(batchId),
+                    teacherId: new mongoose.Types.ObjectId(user._id)
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "students",
+                    foreignField: "_id",
+                    as: "studentDetails"
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    students: {
+                        _id: 1,
+                        name: 1,
+                        email: 1,
+                        guardian: 1
+                    },
+                    studentDetails: 1
+                }
+            }
+        ]);
+
+        if (!batches || batches.length === 0) {
+            return res.status(404).json({ message: "Batch not found or you are not authorized" });
+        }
+
+        // Return batch info and populated student details
+        return res.status(200).json({ batch: batches[0] });
     } catch (error) {
-        console.log("Error in getBatchById controller: " + error);
+        console.log("Error in getBatchByIdForTeacher controller: " + error);
         next(error);
     }
-})
+});
 
 // get all the batches where the student exists
 export const getAllBatchesForStudent = expressasyncHandler(async (req, res, next) => {
@@ -359,7 +392,7 @@ export const getAllBatchesForStudent = expressasyncHandler(async (req, res, next
         const batches = await BatchModel.aggregate([
             {
                 $match: {
-                    students: { $in: new mongoose.Types.ObjectId(user._id) }
+                    students: new mongoose.Types.ObjectId(user._id)
                 }
             },
             {
@@ -409,7 +442,7 @@ export const getAllBatchesofOrganization = expressasyncHandler(async (req, res, 
         const user = req.user;
         // Extract organization ObjectIds from user.Organization array
         const userOrganizationIds = user.Organization.map(org =>
-            typeof org._id === "object" ? org._id : mongoose.Types.ObjectId(org._id)
+            typeof org._id === "object" ? org._id : new mongoose.Types.ObjectId(org._id)
         );
 
         // Aggregation pipeline:
@@ -421,7 +454,7 @@ export const getAllBatchesofOrganization = expressasyncHandler(async (req, res, 
             {
                 $match: {
                     Organization: { $in: userOrganizationIds },
-                    students: mongoose.Types.ObjectId(user._id)
+                    students: new mongoose.Types.ObjectId(user._id)
                 }
             },
             {
@@ -453,7 +486,7 @@ export const getAllBatchesofOrganization = expressasyncHandler(async (req, res, 
                     organization: "$organizationDetails.name",
                     teacher: "$teacherDetails.name",
                     isStudent: {
-                        $in: [mongoose.Types.ObjectId(user._id), "$students"]
+                        $in: [new mongoose.Types.ObjectId(user._id), "$students"]
                     }
                 }
             }
