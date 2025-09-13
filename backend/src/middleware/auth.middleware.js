@@ -23,12 +23,21 @@ export const AuthMiddleware = expressAsyncHandler(async (req, res, next) => {
             if (!decoded) {
                 return res.status(401).json({ message: "Invalid token, access denied" });
             }
-            const user = await UserModel.findById(decoded.id).select("-password").populate("Organization", { name: 1, _id: 1 });
+            const user = await UserModel.findById(decoded.id)
+                .select("-password")
+                .populate("Organization.name", { name: 1, _id: 1 });
             if (!user) {
                 return res.status(401).json({ message: "Unauthorized, user not found" });
             }
-
-            req.user = user;
+            req.user = {
+                ...user._doc, Organization: user.Organization.map((org) => {
+                    return {
+                        _id: org.name._id,
+                        name: org.name.name,
+                        isTeacherVerified: org.isTeacherVerified
+                    }
+                })
+            };
             next();
         } catch (error) {
             console.error("Error verifying token:", error);
@@ -64,13 +73,13 @@ export const VerifyTeacher = expressAsyncHandler(async (req, res, next) => {
         if (!currentUser) {
             return res.status(401).json({ message: "Unauthorized, user not found" });
         }
-        const isTeacher = currentUser.role === "teacher" && currentUser.isTeacherVerified;
+        const isTeacher = currentUser.role === "teacher";
         if (!isTeacher) {
             return res.status(401).json({ message: "Unauthorized, access denied" });
         }
         next();
     } catch (error) {
-        console.log("Error in exportVerifyTeacher middleware: " + error);
+        console.log("Error in VerifyTeacher middleware: " + error);
         next(error);
     }
 });
@@ -87,7 +96,7 @@ export const VerifyStudent = expressAsyncHandler(async (req, res, next) => {
         }
         next();
     } catch (error) {
-        console.log("Error in exportVerifyStudent middleware: " + error);
+        console.log("Error in VerifyStudent middleware: " + error);
         next(error);
     }
 });
@@ -95,20 +104,21 @@ export const VerifyStudent = expressAsyncHandler(async (req, res, next) => {
 export const OrganizationAdmin = expressAsyncHandler(async (req, res, next) => {
     try {
         const currentUser = req.user;
-
-        for (let org in currentUser.Organization) {
-            const Organization = await OrganizationModel.findById(currentUser.Organization);
-            if (!Organization) {
-                return res.status(401).json({ message: "Unauthorized, Organization not found" });
-            }
-            const isAdmin = Organization.adminIds.includes(currentUser.email);
-            if (!isAdmin) {
-                return res.status(401).json({ message: "Unauthorized, access denied" });
+        let isOrgAdmin = false;
+        for (let org of currentUser.Organization) {
+            const organization = await OrganizationModel.findById(org._id);
+            if (organization && organization.adminIds.includes(currentUser.email)) {
+                isOrgAdmin = true;
+                break;
             }
         }
+        if (!isOrgAdmin) {
+            return res.status(401).json({ message: "Unauthorized, access denied" });
+        }
+        req.isOrgAdmin = true; // <-- set a flag if needed
         next();
     } catch (error) {
         console.log("Error in OrganizationAdmin middleware: " + error);
         next(error);
     }
-})
+});

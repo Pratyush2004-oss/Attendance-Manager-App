@@ -7,8 +7,6 @@ export const AutomateDeleteUser = async () => {
         createdAt: { $lt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) },
         // Only delete teachers who are not isTeacherVerified
         $or: [
-            // Only delete teachers who are not isTeacherVerified
-            { role: "teacher", isTeacherVerified: false, isVerified: true },
             // Only delete users who have not verified their account
             { isVerified: false }
         ]

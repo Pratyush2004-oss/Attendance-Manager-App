@@ -1,5 +1,20 @@
 import mongoose from "mongoose";
 
+const OrganizationSchema = new mongoose.Schema(
+    {
+        name: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Organization",
+            required: true,
+        },
+        isTeacherVerified: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    { _id: false }
+);
+
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -19,11 +34,7 @@ const UserSchema = new mongoose.Schema({
         enum: ['teacher', 'student'],
         required: true
     },
-    Organization: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Organization",
-        required: true
-    }],
+    Organization: [OrganizationSchema],
     guardian: {
         name: {
             type: String,
@@ -39,9 +50,6 @@ const UserSchema = new mongoose.Schema({
     },
     otp: {
         type: Number
-    },
-    isTeacherVerified: {
-        type: Boolean
     },
     verificationToken: {
         type: String

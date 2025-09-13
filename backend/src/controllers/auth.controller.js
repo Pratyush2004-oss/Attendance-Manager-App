@@ -18,7 +18,7 @@ export const registerUser = expressAsyncHandler(async (req, res, next) => {
         const { name, email, password, Organization, role, guardianName, guardianNumber } = req.body;
 
         // validation
-        if (!name || !email || !password || !role || !Organization) {
+        if (!name || !email || !password || !role || !Organization || Array.isArray(Organization) && Organization.length === 0) {
             return res.status(400).json({ error: "All fields are required" });
         }
 
@@ -45,13 +45,12 @@ export const registerUser = expressAsyncHandler(async (req, res, next) => {
         }
 
         // boolean variable to check whether the teacher email id is in the admin list of the organization
-        let isTeacherAdmin = false;
+        let isOrganizationAdmin = [];
         for (let org of Organization) {
             const organization = await OrganizationModel.findById(org);
-            if (organization.adminIds.includes(email)) {
-                isTeacherAdmin = true;
-                break;
-            }
+            let isOrgAdmin = organization.adminIds.includes(email);
+            isOrganizationAdmin.push({ name: org, isTeacherVerified: isOrgAdmin });
+
         }
 
         // hash password
@@ -75,9 +74,8 @@ export const registerUser = expressAsyncHandler(async (req, res, next) => {
                     name: guardianName,
                     number: guardianNumber
                 },
-                Organization,
+                Organization: isOrganizationAdmin,
                 verificationToken,
-                isTeacherVerified: isTeacherAdmin
             });
             res.status(201).json({ message: "Verification email sent, check your email and verify your account" });
         }
@@ -150,7 +148,7 @@ export const verifyUser = expressAsyncHandler(async (req, res, next) => {
 
         // update user
         user.isVerified = true;
-        user.verificationToken = null; // clear the otp
+        user.verificationToken = undefined; // clear the link
         await user.save();
         if (user.role === "teacher" && !user.isTeacherVerified) {
             return res.send(`
@@ -190,7 +188,8 @@ export const loginUser = expressAsyncHandler(async (req, res, next) => {
         }
         // check for user
         const user = await UserModel.findOne({ email })
-            .populate("Organization", { name: 1 });
+            .populate("Organization.name", { name: 1, _id: 1 })
+            .exec();
         if (!user) {
             return res.status(400).json({ error: "User not found" });
         }
@@ -203,30 +202,69 @@ export const loginUser = expressAsyncHandler(async (req, res, next) => {
             return res.status(400).json({ error: "User is not verified, first verify the user" });
         }
 
-        // if user is a teacher but not verified 
-        if (user.role === "teacher" && !user.isTeacherVerified) {
-            return res.status(400).json({ error: "User is not verified, Contact the Organization admin to verify the teacher" });
+        const userDetail = {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            guardian: user.guardian,
+            Organization: user.Organization.map((org) => {
+                return {
+                    _id: org.name._id,
+                    name: org.name.name,
+                    isTeacherVerified: org.isTeacherVerified
+                }
+            }),
         }
-
-        // check if the user is the admin of the organization : to-do
 
         // generate token
         const token = generateToken(user._id);
         res.status(200).json({
             message: "Login successful",
             token,
+            user: userDetail
+        });
+
+    } catch (error) {
+        console.log("Error in login controller : " + error);
+        next(error);
+    }
+})
+
+// check-auth
+export const checkAuth = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const user = req.user;
+        if (!user) {
+            return res.status(401).json({ error: "Unauthorized, user not found" });
+        }
+        res.status(200).json({
             user: {
-                _id: user._id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                isVerified: user.isVerified,
                 guardian: user.guardian,
                 Organization: user.Organization
             }
         });
 
     } catch (error) {
-        console.log("Error in login controller : " + error);
+        console.log("Error in check-auth controller : " + error);
+        next(error);
+    }
+})
+
+// check-admin
+export const checkAdmin = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const user = req.user;
+        if (!user) {
+            return res.status(401).json({ error: "Unauthorized, user not found" });
+        }
+        res.status(200).json({ message: "Admin Authorized", isAdmin: true });
+    } catch (error) {
+        console.log("Error in check-admin controller : " + error);
         next(error);
     }
 })
@@ -276,46 +314,7 @@ export const resetPassword = expressAsyncHandler(async (req, res, next) => {
 
     // update password
     user.password = hashedPassword;
-    user.otp = null;
+    user.otp = undefined;
     await user.save();
     res.status(200).json({ message: "Password reset successfully" });
-})
-
-// check-auth
-export const checkAuth = expressAsyncHandler(async (req, res, next) => {
-    try {
-        const user = req.user;
-        if (!user) {
-            return res.status(401).json({ error: "Unauthorized, user not found" });
-        }
-        res.status(200).json({
-            message: "Authorized",
-            user: {
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                isVerified: user.isVerified,
-                guardian: user.guardian,
-                Organization: user.Organization
-            }
-        });
-
-    } catch (error) {
-        console.log("Error in check-auth controller : " + error);
-        next(error);
-    }
-})
-
-// check-admin
-export const checkAdmin = expressAsyncHandler(async (req, res, next) => {
-    try {
-        const user = req.user;
-        if (!user) {
-            return res.status(401).json({ error: "Unauthorized, user not found" });
-        }
-        res.status(200).json({ message: "Admin Authorized", isAdmin: true });
-    } catch (error) {
-        console.log("Error in check-admin controller : " + error);
-        next(error);
-    }
 })
