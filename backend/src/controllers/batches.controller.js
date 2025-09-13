@@ -318,7 +318,7 @@ export const getAllBatchesForTeacher = expressasyncHandler(async (req, res, next
                     _id: 1,
                     name: 1,
                     batchJoiningCode: 1,
-                    organization: "$organizationDetails.name",
+                    Organization: { name: "$organizationDetails.name" },
                     studentCount: { $size: "$students" }
                 }
             }
@@ -389,8 +389,8 @@ export const getAllBatchesForStudent = expressasyncHandler(async (req, res, next
                     _id: 1,
                     name: 1,
                     batchJoiningCode: 1,
-                    organization: "$organizationDetails.name",
-                    teacher: "$teacherDetails.name",
+                    Organization: { name: "$organizationDetails.name" },
+                    teacher: { name: "$teacherDetails.name" },
                     studentCount: { $size: "$students" }
                 }
             }
