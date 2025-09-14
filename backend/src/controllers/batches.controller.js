@@ -167,8 +167,8 @@ export const addStudentUsingCode = expressasyncHandler(async (req, res, next) =>
         }
 
         // check if the student and batch are in the same organization
-        if(user.find(org => org.name.toString() === batch.Organization.toString())) {
-            return res.status(400).json({ error: "You are not a student of this batch" });
+        if (user.Organization.find(org => org.name.toString() === batch.Organization.toString())) {
+            return res.status(400).json({ error: "You are not a student of this Organization" });
         }
 
 
@@ -374,7 +374,7 @@ export const getBatchByIdForTeacher = expressasyncHandler(async (req, res, next)
         ]);
 
         if (!batches || batches.length === 0) {
-            return res.status(404).json({ message: "Batch not found or you are not authorized" });
+            return res.status(404).json({ error: "Batch not found or you are not authorized" });
         }
 
         // Return only the student list
