@@ -137,15 +137,16 @@ export type MarkAttendaneInputType = {
   }[];
 };
 
-export type AttendanceForStudentType = {
+export interface AttendanceForStudentType {
   _id: string;
-  date: Date;
   batchName: string;
   presentDays: number;
   absentDays: number;
   leaveDays: number;
-  attendanceRecords: {
-    date: Date;
-    status: "present" | "absent" | "leave";
-  }[];
+  attendanceRecords: AttendaceRecordType[];
+};
+
+export type AttendaceRecordType = {
+  date: Date;
+  status: "present" | "absent" | "leave";
 };

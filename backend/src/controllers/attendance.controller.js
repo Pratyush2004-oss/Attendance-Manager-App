@@ -291,24 +291,10 @@ export const getAttendanceForStudent = expressAsyncHandler(async (req, res, next
         }
 
         // now I want to count the attendance of the students
-        // Count the number of days the student was absent, present, and on leave
-        const attendanceSummary = attendance.map((batch) => {
-            const absentDays = batch.attendanceRecords.filter((record) => record.status === "absent").length;
-            const presentDays = batch.attendanceRecords.filter((record) => record.status === "present").length;
-            const leaveDays = batch.attendanceRecords.filter((record) => record.status === "leave").length;
-
-            return {
-                batchId: batch.batchId,
-                batchName: batch.batchName,
-                absentDays,
-                presentDays,
-                leaveDays,
-            };
-        });
 
 
 
-        return res.status(200).json({ attendanceSummary, attendance });
+        return res.status(200).json({ attendance });
     } catch (error) {
         console.log("Error in getAttendanceForStudent controller: " + error);
         next(error);

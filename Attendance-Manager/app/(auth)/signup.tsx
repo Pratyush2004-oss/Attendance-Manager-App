@@ -219,7 +219,7 @@ const Signup = () => {
               {/* Organization */}
               <View className="w-full gap-2">
                 <Text className="ml-3 text-xl font-bold text-white">
-                  Organization:
+                  Organization
                 </Text>
                 <View className="w-full bg-white rounded-lg">
                   <Picker

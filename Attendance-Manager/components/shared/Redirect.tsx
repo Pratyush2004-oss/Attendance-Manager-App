@@ -1,4 +1,3 @@
-import { useOrganizationStore } from "@/store/Organization.store";
 import { useUserStore } from "@/store/userStore";
 import { Redirect, useSegments } from "expo-router";
 import React, { useEffect } from "react";
