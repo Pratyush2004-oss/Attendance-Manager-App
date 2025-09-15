@@ -1,11 +1,11 @@
+import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useRef } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
   Animated,
   Dimensions,
+  Pressable,
+  TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useRef } from "react";
 
 const { width } = Dimensions.get("window");
 export default function Sidebar({
@@ -38,7 +38,11 @@ export default function Sidebar({
         contentContainerStyle={{ paddingBottom: 20 }}
         className={`absolute top-0 left-0 w-3/4 bg-white pt-5 px-4 h-full z-40 shadow-lg`}
         style={{ transform: [{ translateX: slideAnim }] }}
-      ></Animated.ScrollView>
+      >
+        <Pressable className="absolute top-0 right-0 z-50" onPress={onClose}>
+          <Ionicons name="close-circle-outline" size={20} color="red" />
+        </Pressable>
+      </Animated.ScrollView>
     </>
   );
 }

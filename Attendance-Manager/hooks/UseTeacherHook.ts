@@ -13,6 +13,7 @@ const useTeacherHook = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      if (batches.status === 400) throw new Error(batches.data.error);
       return batches.data.batchDetails;
     } catch (error) {}
   };
@@ -53,7 +54,7 @@ const useTeacherHook = () => {
         }
       );
       if (batchDetails.status === 400) throw new Error(batchDetails.data.error);
-      return batchDetails.data.batch;
+      return batchDetails.data.students;
     } catch (error) {}
   };
 

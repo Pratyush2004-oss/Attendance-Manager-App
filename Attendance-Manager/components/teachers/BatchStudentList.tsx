@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import {
   FlatList,
   Image,
-  Pressable,
   Text,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
 import AddToBatchModal from "./AddToBatchModal";
@@ -27,25 +26,25 @@ const BatchStudentList = () => {
               <Text className="text-3xl font-bold">
                 Students ({batchStudentList.length})
               </Text>
-              <TouchableOpacity
+              <Pressable
                 className="p-1 rounded-full bg-blue-500/70"
                 onPress={() => setshowModal(true)}
               >
                 <Ionicons name="add-circle-outline" size={30} color="white" />
-              </TouchableOpacity>
+              </Pressable>
             </View>
           )}
           ListEmptyComponent={() => (
             <View className="items-center justify-center flex-1 h-[50vh] bg-gray-200 gap-10">
               <Text className="text-3xl font-bold">No Students found</Text>
-              <TouchableOpacity
+              <Pressable
                 className="w-5/6 px-5 py-3 rounded-full bg-blue-700/70"
                 onPress={() => setshowModal(true)}
               >
                 <Text className="text-xl text-center text-white">
                   Add Students
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           )}
           renderItem={({ item }) => (

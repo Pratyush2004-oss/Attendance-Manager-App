@@ -43,7 +43,7 @@ export type BatchForStudentType = {
   Organization: {
     name: string;
   };
-  teacherId: {
+  teacher: {
     name: string;
   };
   studentCount: number;
@@ -102,7 +102,7 @@ export type Add_To_BatchInputType = {
 export type removeStudentFromBatchInputType = {
   batchId: string;
   studentId: string;
-}
+};
 
 export type BatchdetailType = {
   _id: string;
@@ -125,6 +125,16 @@ export type JoinBatchInputType = {
 export type OrganizationType = {
   _id: string;
   name: string;
+  isTeacherVerified: boolean;
+};
+
+export type MarkAttendaneInputType = {
+  batchId: string;
+  date: Date;
+  records: {
+    studentId: string;
+    status: "present" | "absent" | "leave";
+  }[];
 };
 
 export type AttendanceForStudentType = {

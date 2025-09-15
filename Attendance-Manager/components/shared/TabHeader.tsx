@@ -1,9 +1,8 @@
-import { useOrganizationStore } from "@/store/Organization.store";
 import { useUserStore } from "@/store/userStore";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 const TabHeader = ({
   onSidebarPress,
@@ -37,9 +36,9 @@ const TabHeader = ({
     <View className="relative z-10 flex-row items-center justify-between w-full px-4 py-3 bg-white shadow-md">
       <View className="flex-row items-center gap-2">
         {/* sidebar button */}
-        <TouchableOpacity onPress={onSidebarPress}>
+        <Pressable onPress={onSidebarPress}>
           <Ionicons name="menu" size={20} color="#22223b" />
-        </TouchableOpacity>
+        </Pressable>
 
         {/* App Logo */}
         <Pressable
@@ -54,34 +53,31 @@ const TabHeader = ({
 
       {/* Right side */}
       <View className="flex-row items-center mr-3">
-        <TouchableOpacity
-          className="items-center mt-1"
-          onPress={handleProfilePress}
-        >
+        <Pressable className="items-center mt-1" onPress={handleProfilePress}>
           <Ionicons name="person-circle-outline" size={28} color={"#2563eb"} />
-        </TouchableOpacity>
+        </Pressable>
         {dropdownVisible && (
           <View className="absolute right-0 p-2 bg-white rounded-md shadow-md top-12">
-            <TouchableOpacity
+            <Pressable
               className="px-4 py-2"
               onPress={() => handleMenuOption("profile")}
             >
               <Text className="text-lg">Profile</Text>
-            </TouchableOpacity>
+            </Pressable>
             {isOrganizationAdmin && (
-              <TouchableOpacity
+              <Pressable
                 className="px-4 py-2"
                 onPress={() => handleMenuOption("Admin")}
               >
                 <Text className="text-lg">Admin</Text>
-              </TouchableOpacity>
+              </Pressable>
             )}
-            <TouchableOpacity
+            <Pressable
               className="px-4 py-2"
               onPress={() => handleMenuOption("logout")}
             >
               <Text className="text-lg">Logout</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         )}
       </View>

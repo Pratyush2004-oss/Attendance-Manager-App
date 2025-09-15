@@ -2,7 +2,6 @@ import {
   View,
   Text,
   Image,
-  TouchableOpacity,
   TextInput,
   Pressable,
   KeyboardAvoidingView,
@@ -96,7 +95,7 @@ const Login = () => {
                   />
                 </Pressable>
               </View>
-              <TouchableOpacity
+              <Pressable
                 className="w-full px-3 py-2 rounded-md bg-blue-900/70"
                 onPress={handleLogin}
               >
@@ -107,7 +106,7 @@ const Login = () => {
                     "Login"
                   )}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
             <Pressable
               className="items-end w-full mt-1"
@@ -122,9 +121,9 @@ const Login = () => {
           {/* Footer for Signup */}
           <View className="flex-row items-center justify-center w-full gap-2 py-2 pb-5 border-t-2 border-white">
             <Text className="text-xl text-white">Don't have an account?</Text>
-            <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
+            <Pressable onPress={() => router.push("/(auth)/signup")}>
               <Text className="text-xl text-blue-700">Register</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </View>

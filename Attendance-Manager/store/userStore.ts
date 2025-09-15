@@ -140,49 +140,54 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
   },
   //   check auth controller
   checkAuth: async () => {
-    set({ isCheckingAuth: true, isOrganizationAdmin: false, isAdmin: false });
-    const token = await AsyncStorage.getItem("token");
-    if (!token) {
-      return set({
-        isCheckingAuth: false,
-        isAuthenticated: false,
-        token: null,
-        user: null,
-      });
-    }
-
-    const response = await axios.get(UserApis.checkAuth, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (response.status === 400) throw new Error(response.data.message);
-    set({
-      token: token,
-      isCheckingAuth: false,
-      isAuthenticated: true,
-      user: response.data.user,
-    });
-
-    // check for Organization Admin
     try {
-      const isAdmin = await axios.get(OrganizationApis.checkOrganizationAdmin, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (isAdmin.status === 400) throw new Error(isAdmin.data.error);
-      if (isAdmin.data.isAdmin) set({ isOrganizationAdmin: true });
-    } catch (error: any) {}
-    // check for admin also
-    try {
-      const requireAdmin = await axios.get(UserApis.checkAdmin, {
+      set({ isCheckingAuth: true, isOrganizationAdmin: false, isAdmin: false });
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        return set({
+          isCheckingAuth: false,
+          isAuthenticated: false,
+          token: null,
+          user: null,
+        });
+      }
+
+      const response = await axios.get(UserApis.checkAuth, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (response.status === 400) throw new Error(response.data.message);
-      if (requireAdmin.data.isAdmin) set({ isAdmin: true });
+      set({
+        token: token,
+        isCheckingAuth: false,
+        isAuthenticated: true,
+        user: response.data.user,
+      });
+
+      // check for Organization Admin
+      try {
+        const isAdmin = await axios.get(
+          OrganizationApis.checkOrganizationAdmin,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (isAdmin.status === 400) throw new Error(isAdmin.data.error);
+        if (isAdmin.data.isAdmin) set({ isOrganizationAdmin: true });
+      } catch (error: any) {}
+      // check for admin also
+      try {
+        const requireAdmin = await axios.get(UserApis.checkAdmin, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.status === 400) throw new Error(response.data.message);
+        if (requireAdmin.data.isAdmin) set({ isAdmin: true });
+      } catch (error) {}
     } catch (error) {
     } finally {
       set({ isCheckingAuth: false });

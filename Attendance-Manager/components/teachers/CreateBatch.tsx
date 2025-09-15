@@ -7,10 +7,9 @@ import React, { useState } from "react";
 import {
   ActivityIndicator,
   Modal,
-  Pressable,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
 
@@ -50,7 +49,7 @@ const CreateBatch = ({ refreshList }: { refreshList: () => Promise<void> }) => {
   };
   return (
     <View className="px-5 mt-5">
-      <TouchableOpacity
+      <Pressable
         className="flex-row items-center justify-center px-5 py-3 rounded-full bg-blue-700/70 "
         onPress={() => setshowModal(true)}
       >
@@ -63,7 +62,7 @@ const CreateBatch = ({ refreshList }: { refreshList: () => Promise<void> }) => {
         <Text className="text-lg font-medium text-center text-white">
           Create Batch
         </Text>
-      </TouchableOpacity>
+      </Pressable>
       <Modal
         visible={showModal}
         onRequestClose={() => setshowModal(false)}
@@ -89,7 +88,7 @@ const CreateBatch = ({ refreshList }: { refreshList: () => Promise<void> }) => {
                 Batch Name
               </Text>
               <TextInput
-                placeholder="John Doe"
+                placeholder="B.Tech / Class 12th"
                 className="w-full px-3 py-2 text-xl border border-black rounded-md bg-200"
                 value={input.name}
                 onChangeText={(text) => setInput({ ...input, name: text })}
@@ -106,7 +105,9 @@ const CreateBatch = ({ refreshList }: { refreshList: () => Promise<void> }) => {
                   }
                 >
                   <Picker.Item label="Select Organization" value="" />
-                  {user?.Organization.map((organization) => (
+                  {user?.Organization.filter(
+                    (item) => item.isTeacherVerified
+                  ).map((organization) => (
                     <Picker.Item
                       key={organization._id}
                       label={organization.name}
@@ -117,7 +118,7 @@ const CreateBatch = ({ refreshList }: { refreshList: () => Promise<void> }) => {
               </View>
             </View>
 
-            <TouchableOpacity
+            <Pressable
               className="flex-row items-center justify-center w-full px-5 py-3 mt-3 rounded-full bg-blue-700/70"
               onPress={handleSubmit}
               disabled={isLoading}
@@ -129,7 +130,7 @@ const CreateBatch = ({ refreshList }: { refreshList: () => Promise<void> }) => {
                   "Create Batch"
                 )}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </Modal>

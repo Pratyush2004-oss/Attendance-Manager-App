@@ -1,7 +1,7 @@
 import { useOrganizationStore } from "@/store/Organization.store";
 import { Teacher } from "@/types";
 import React, { useState } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Text, Pressable, View } from "react-native";
 import TeacherActionModal from "./TeacherActionModal";
 
 const TeacherList = () => {
@@ -24,7 +24,7 @@ const TeacherList = () => {
           </View>
         )}
         renderItem={({ item }) => (
-          <TouchableOpacity
+          <Pressable
             onLongPress={() => setselectedTeacher(item)}
             className={`flex-row items-center justify-between w-full px-5 py-3 mt-3 ${item.isTeacherVerified ? "bg-green-500/30" : "bg-red-500/30"} rounded-xl`}
           >
@@ -35,7 +35,7 @@ const TeacherList = () => {
               </Text>
             </View>
             <Text>{item.isTeacherVerified ? "Verified" : "not verified"}</Text>
-          </TouchableOpacity>
+          </Pressable>
         )}
         keyExtractor={(item) => item._id}
         ListFooterComponent={() => (

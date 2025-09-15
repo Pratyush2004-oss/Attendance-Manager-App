@@ -1,17 +1,16 @@
+import { useUserStore } from "@/store/userStore";
+import { resetPasswordInputType } from "@/types";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
 import {
-  View,
-  Text,
   Modal,
   Pressable,
+  Text,
   TextInput,
-  TouchableOpacity,
+  View
 } from "react-native";
-import React, { useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import OtpVerification from "./auth/OtpVerification";
-import { resetPasswordInputType } from "@/types";
-import { useRouter } from "expo-router";
-import { useUserStore } from "@/store/userStore";
 
 const ForgotPasswordModal = ({
   input,
@@ -121,12 +120,12 @@ const ForgotPasswordModal = ({
           </View>
 
           {/* Confirm Button */}
-          <TouchableOpacity
+          <Pressable
             className="w-full px-3 py-2 mt-5 rounded-md bg-blue-900/70"
             onPress={handleResetPassword}
           >
             <Text className="text-2xl text-center text-white">Confirm</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </Modal>

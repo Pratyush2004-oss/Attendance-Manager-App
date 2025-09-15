@@ -34,6 +34,10 @@ export const OrganizationApis = {
   deleteTeacher: `${BASE_URL}/api/organization/delete-teaher-account/:teacherId`,
 };
 
+export const AttendanceApis = {
+  markAttendace: `${BASE_URL}/api/attendance/mark-attendance`,
+};
+
 export const NavigationOptions = [
   {
     category: "Batches",

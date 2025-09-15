@@ -44,7 +44,7 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
         }
       );
       if (batchDetails.status === 400) throw new Error(batchDetails.data.error);
-      set({ batchStudentList: batchDetails.data.batch.students });
+      set({ batchStudentList: batchDetails.data.students });
     } catch (error) {
     } finally {
       set({ isLoading: false });

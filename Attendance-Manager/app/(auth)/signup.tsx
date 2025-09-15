@@ -14,7 +14,6 @@ import {
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 const Signup = () => {
@@ -80,7 +79,7 @@ const Signup = () => {
       setIsloading(true);
       const response = await signup(input);
       if (response) {
-        router.push("/(auth)");
+        router.replace("/(auth)");
       }
     } catch (error) {
     } finally {
@@ -156,7 +155,7 @@ const Signup = () => {
                 {/* group */}
                 <View className="flex-row rounded-md">
                   {/* Student */}
-                  <TouchableOpacity
+                  <Pressable
                     className="flex-row gap-2 mr-3"
                     onPress={() => {
                       if (input.role === "student")
@@ -184,9 +183,9 @@ const Signup = () => {
                     <Text className="text-xl font-bold text-white">
                       Student
                     </Text>
-                  </TouchableOpacity>
+                  </Pressable>
                   {/* teacher */}
-                  <TouchableOpacity
+                  <Pressable
                     className="flex-row gap-2 mr-3"
                     onPress={() => {
                       if (input.role === "teacher")
@@ -214,7 +213,7 @@ const Signup = () => {
                     <Text className="text-xl font-bold text-white">
                       Teacher
                     </Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               </View>
               {/* Organization */}
@@ -306,7 +305,7 @@ const Signup = () => {
                 </View>
               )}
               {/* Signup button */}
-              <TouchableOpacity
+              <Pressable
                 className="w-full px-3 py-2 rounded-md bg-blue-900/70"
                 onPress={handleSignup}
                 disabled={isloading}
@@ -318,7 +317,7 @@ const Signup = () => {
                     "Signup"
                   )}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </ScrollView>
 
@@ -328,9 +327,9 @@ const Signup = () => {
               <Text className="text-xl text-white">
                 Already have an account?
               </Text>
-              <TouchableOpacity onPress={() => router.replace("/(auth)")}>
+              <Pressable onPress={() => router.replace("/(auth)")}>
                 <Text className="text-xl text-blue-700">Login</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </View>
         </View>

@@ -2,13 +2,7 @@ import useStudentHook from "@/hooks/UseStudentHook";
 import { BatchForStudentType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import {
-  FlatList,
-  Image,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { FlatList, Image, Text, Pressable, View } from "react-native";
 import SearchBar from "../shared/SearchBar";
 
 const BatchFlatList = () => {
@@ -20,7 +14,7 @@ const BatchFlatList = () => {
     setBatchList(batches);
   };
   useEffect(() => {
-    BatchList.length === 0 && getBatchList();
+    getBatchList();
   }, [BatchList]);
 
   const filteredList = () => {
@@ -34,7 +28,7 @@ const BatchFlatList = () => {
   return (
     <>
       {/* Search Bar */}
-      {BatchList.length > 0 && (
+      {BatchList && BatchList.length > 0 && (
         <SearchBar searchInput={searchInput} setSearchInput={setSearchInput} />
       )}
       <FlatList
@@ -54,11 +48,11 @@ const BatchFlatList = () => {
         )}
         ListEmptyComponent={() => (
           <View className="items-center justify-center flex-1 my-auto h-96">
-            <TouchableOpacity className="w-5/6 p-3 bg-blue-500 rounded-xl">
+            <Pressable className="w-5/6 p-3 bg-blue-500 rounded-xl">
               <Text className="text-2xl font-medium text-center text-white">
                 Join Batches
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         )}
         renderItem={({ item }) => (
@@ -76,7 +70,7 @@ const BatchFlatList = () => {
                 <Text className="text-lg font-medium text-white">
                   Teacher:{" "}
                   <Text className="text-xl font-extrabold">
-                    {item.teacherId.name}
+                    {item.teacher.name}
                   </Text>
                 </Text>
               </Text>
@@ -87,9 +81,9 @@ const BatchFlatList = () => {
                 </Text>
               </Text>
             </View>
-            <TouchableOpacity className="absolute right-5">
+            <Pressable className="absolute right-5">
               <Ionicons name="arrow-forward-circle" size={30} color="white" />
-            </TouchableOpacity>
+            </Pressable>
           </View>
         )}
       />

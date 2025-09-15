@@ -3,7 +3,8 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 const ProfilePage = () => {
-  const { user } = useUserStore();
+  const { user, token } = useUserStore();
+  console.log(token)
   return (
     user && (
       <View className="relative items-center justify-around flex-1">
@@ -51,12 +52,14 @@ const ProfilePage = () => {
                 />
               </View>
               <Text className="text-2xl font-medium">{item.name}</Text>
-              <Ionicons
-                name="shield-checkmark-outline"
-                size={24}
-                color="green"
-                className="ml-auto"
-              />
+              {item.isTeacherVerified && (
+                <Ionicons
+                  name="shield-checkmark-outline"
+                  size={24}
+                  color="green"
+                  className="ml-auto"
+                />
+              )}
             </View>
           )}
         />

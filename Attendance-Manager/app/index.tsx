@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, Pressable, View } from "react-native";
 
 export default function Index() {
   const navigate = useRouter();
@@ -8,12 +8,12 @@ export default function Index() {
       <Text className="text-2xl text-white">
         Edit app/index.tsx to edit this screen.
       </Text>
-      <TouchableOpacity
+      <Pressable
         className="p-5 mt-4 border-2 border-black rounded-md"
         onPress={() => navigate.push("/(auth)")}
       >
         <Text>Navigate to Home</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

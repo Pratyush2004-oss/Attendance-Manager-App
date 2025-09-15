@@ -1,17 +1,16 @@
-import {
-  View,
-  Text,
-  Modal,
-  Image,
-  TouchableOpacity,
-  Pressable,
-  ActivityIndicator,
-} from "react-native";
-import React, { useState } from "react";
-import { Teacher } from "@/types";
 import { useOrganizationStore } from "@/store/Organization.store";
-import { Ionicons } from "@expo/vector-icons";
 import { useUserStore } from "@/store/userStore";
+import { Teacher } from "@/types";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  Modal,
+  Pressable,
+  Text,
+  View
+} from "react-native";
 
 const TeacherActionModal = ({
   selectedTeacher,
@@ -78,7 +77,7 @@ const TeacherActionModal = ({
                 <ActivityIndicator />
               ) : (
                 <>
-                  <TouchableOpacity
+                  <Pressable
                     className="px-5 py-2 rounded-full bg-green-500/70"
                     disabled={selectedTeacher.isTeacherVerified}
                     onPress={handleVerify}
@@ -88,13 +87,13 @@ const TeacherActionModal = ({
                         ? "Verified"
                         : "Verify"}
                     </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
+                  </Pressable>
+                  <Pressable
                     className="px-5 py-2 rounded-full bg-red-500/70"
                     onPress={handleRemove}
                   >
                     <Text className="text-xl text-white">Remove</Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </>
               )}
             </View>

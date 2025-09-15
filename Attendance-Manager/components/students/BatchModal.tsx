@@ -1,14 +1,13 @@
 import useStudentHook from "@/hooks/UseStudentHook";
 import { AllBatchesType, JoinBatchInputType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   Image,
   Modal,
-  Pressable,
   Text,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
 import OtpVerification from "../auth/OtpVerification";
@@ -29,9 +28,10 @@ const BatchModal = ({
   const [isLoading, setisLoading] = useState(false);
   const router = useRouter();
 
-  const handleOtpChange = (otp: string) => {
-    setInput({ ...input, batchJoiningCode: otp });
-  };
+  // Wrap this function in useCallback
+  const handleOtpChange = useCallback((otp: string) => {
+    setInput((prevInput) => ({ ...prevInput, batchJoiningCode: otp }));
+  }, []); // Empty dependency array means the function is created only once
 
   const handleSubmit = async () => {
     try {
@@ -90,7 +90,7 @@ const BatchModal = ({
                 <View className="p-2 my-2 bg-gray-200 rounded-xl">
                   <OtpVerification onOtpChange={handleOtpChange} />
                 </View>
-                <TouchableOpacity
+                <Pressable
                   className="w-full px-4 py-2 bg-blue-400 rounded-xl"
                   onPress={() => {}}
                 >
@@ -105,7 +105,7 @@ const BatchModal = ({
                       "Join Batch"
                     )}
                   </Text>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             )}
           </View>

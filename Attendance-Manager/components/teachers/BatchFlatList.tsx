@@ -2,7 +2,7 @@ import { BatchForTeacherType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { FlatList, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, Text, Pressable, View } from "react-native";
 import SearchBar from "../shared/SearchBar";
 import { useBatchStore } from "@/store/batch.store";
 
@@ -15,7 +15,7 @@ const BatchFlatList = ({
 }) => {
   const [searchInput, setSearchInput] = useState("");
   const router = useRouter();
-  const {setSelectedBatch} = useBatchStore();
+  const { setSelectedBatch } = useBatchStore();
   useEffect(() => {
     BatchList.length === 0 && getBatchList();
   }, []);
@@ -30,7 +30,7 @@ const BatchFlatList = ({
   return (
     <>
       {/* Search Bar */}
-      {BatchList.length > 0 && (
+      {BatchList && BatchList.length > 0 && (
         <SearchBar searchInput={searchInput} setSearchInput={setSearchInput} />
       )}
       <FlatList
@@ -50,11 +50,11 @@ const BatchFlatList = ({
         )}
         ListEmptyComponent={() => (
           <View className="items-center justify-center flex-1 my-auto h-96">
-            <TouchableOpacity className="w-5/6 p-3 bg-blue-500 rounded-xl">
+            <Pressable className="w-5/6 p-3 bg-blue-500 rounded-xl">
               <Text className="text-2xl font-medium text-center text-white">
                 Create Batch
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         )}
         renderItem={({ item }) => (
@@ -85,7 +85,7 @@ const BatchFlatList = ({
               className="absolute right-5"
               onPress={() => {
                 setSelectedBatch(item);
-                router.push("/teacher/[batchDetails]")
+                router.push("/teacher/[batchDetails]");
               }}
             >
               <Ionicons name="arrow-forward-circle" size={30} color="white" />

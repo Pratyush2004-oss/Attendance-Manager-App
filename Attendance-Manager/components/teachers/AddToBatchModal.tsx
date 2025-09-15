@@ -4,7 +4,14 @@ import { useUserStore } from "@/store/userStore";
 import { Add_To_BatchInputType, Student } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { FlatList, Modal, Pressable, Text, View } from "react-native";
+import {
+  FlatList,
+  Modal,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const AddToBatchModal = ({
   setshowModal,
@@ -83,12 +90,17 @@ const AddToBatchModal = ({
     >
       <View className="items-center justify-center flex-1 bg-gray-500/70">
         <View className="w-5/6 p-5 bg-white rounded-xl h-5/6">
-          <Pressable
+          <TouchableOpacity
             className="absolute top-5 right-5"
             onPress={handleCloseModal}
           >
-            <Ionicons name="close-circle-outline" size={25} color="red" />
-          </Pressable>
+            <Ionicons
+              onPress={handleCloseModal}
+              name="close-circle-outline"
+              size={25}
+              color="red"
+            />
+          </TouchableOpacity>
           <View className="px-2 my-2">
             <Text className="text-3xl font-bold">Add To Batch</Text>
             <Text className="mt-5 text-3xl font-bold text-center">
@@ -132,9 +144,9 @@ const AddToBatchModal = ({
             />
           </View>
           <Pressable
-            className="w-full px-5 py-3 mt-5 rounded-full bg-green-500/70"
+            className="w-full px-5 py-3 mt-5 rounded-full bg-green-500/70 disabled:bg-gray-400/70"
             onPress={handleSubmit}
-            disabled={isLoading}
+            disabled={isLoading || input.studentIds.length === 0}
           >
             <Text className="text-xl font-bold text-center text-white">
               {isLoading ? "Adding..." : "Add Students"}

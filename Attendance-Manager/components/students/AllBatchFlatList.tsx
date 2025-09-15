@@ -8,7 +8,7 @@ import {
   Modal,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
 import BatchModal from "./BatchModal";
@@ -59,15 +59,15 @@ const AllBatchFlatList = () => {
         )}
         ListEmptyComponent={() => (
           <View className="items-center justify-center flex-1 my-auto h-96">
-            <TouchableOpacity className="w-5/6 p-3 bg-blue-500 rounded-xl">
+            <Pressable className="w-5/6 p-3 bg-blue-500 rounded-xl">
               <Text className="text-2xl font-medium text-center text-white">
                 Join Batches
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         )}
         renderItem={({ item }) => (
-          <TouchableOpacity
+          <Pressable
             onLongPress={() => setSelectedBatch(item)}
             className="relative flex-row items-center gap-3 px-5 py-3 mt-3 shadow-lg bg-blue-700/70 rounded-xl"
           >
@@ -90,14 +90,14 @@ const AllBatchFlatList = () => {
               </Text>
             </View>
             {item.isStudent && (
-              <TouchableOpacity className="absolute p-1 bg-white rounded-full right-5">
+              <Pressable className="absolute p-1 bg-white rounded-full right-5">
                 <Ionicons
                   name="shield-checkmark-outline"
                   size={24}
                   color="green"
                   className="ml-auto"
                 />
-              </TouchableOpacity>
+              </Pressable>
             )}
             {selectedBatch?._id === item._id && (
               <BatchModal
@@ -105,7 +105,7 @@ const AllBatchFlatList = () => {
                 setSelectedBatch={setSelectedBatch}
               />
             )}
-          </TouchableOpacity>
+          </Pressable>
         )}
         ListFooterComponent={() => (
           <View className="items-center px-5 py-2">

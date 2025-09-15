@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, Pressable } from "react-native";
 import React from "react";
 import { NavigationOptions } from "@/assets/constants";
 import { Ionicons } from "@expo/vector-icons";
@@ -23,7 +23,7 @@ const HomeLayout = () => {
             showsHorizontalScrollIndicator={false}
             data={item.options}
             renderItem={({ item }) => (
-              <TouchableOpacity
+              <Pressable
                 className="items-center w-[11.5rem] p-4 mr-3 shadow-lg bg-blue-500/70 rounded-xl"
                 onPress={() => {
                   router.push(item.href as any);
@@ -44,7 +44,7 @@ const HomeLayout = () => {
                 <Text className="font-medium text-center text-white text-wrap">
                   {item.title}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             )}
           />
         </View>

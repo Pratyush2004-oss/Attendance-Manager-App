@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
 
@@ -57,14 +57,14 @@ const ForgotPassword = () => {
                   onChangeText={(text) => setinput({ ...input, email: text })}
                 />
               </View>
-              <TouchableOpacity
+              <Pressable
                 className="w-full px-3 py-2 rounded-md bg-blue-900/70"
                 onPress={handleForgotPassword}
               >
                 <Text className="text-2xl text-center text-white">
                   Reset Password
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
 
               <ForgotPasswordModal
                 input={input}

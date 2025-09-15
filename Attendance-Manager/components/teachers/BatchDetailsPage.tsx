@@ -2,10 +2,15 @@ import BackHeader from "@/components/shared/BackHeader";
 import { useBatchStore } from "@/store/batch.store";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, Pressable, View, TouchableOpacity } from "react-native";
 import LoadingSection from "../shared/LoadingSection";
 import BatchStudentList from "./BatchStudentList";
+import { useRouter, useSegments } from "expo-router";
+import AttendanceList from "./AttendanceList";
 const BatchDetailsPage = ({}: {}) => {
+  const router = useRouter();
+  const segment = useSegments();
+  const isBatchDetailsPage = segment[segment.length - 1] === "[batchDetails]";
   const { selectedBatch, isLoading } = useBatchStore();
   return (
     selectedBatch && (
@@ -18,9 +23,11 @@ const BatchDetailsPage = ({}: {}) => {
           />
 
           {/* Edit Button */}
-          <TouchableOpacity className="absolute p-2 bg-blue-500 rounded-full right-5 bottom-2">
-            <Ionicons name="pencil-outline" size={24} color="white" />
-          </TouchableOpacity>
+          {isBatchDetailsPage && (
+            <Pressable className="absolute p-2 bg-blue-500 rounded-full right-5 bottom-2">
+              <Ionicons name="pencil-outline" size={24} color="white" />
+            </Pressable>
+          )}
           <View className="gap-1.5">
             <Text className="text-3xl font-bold text-white">
               {selectedBatch.name}
@@ -42,8 +49,28 @@ const BatchDetailsPage = ({}: {}) => {
             </Text>
           </View>
         </View>
+        {isBatchDetailsPage && (
+          <TouchableOpacity
+            className="flex-row items-center justify-center py-3 my-1 bg-blue-200"
+            onPress={() => router.push("/teacher/markAttendance")}
+          >
+            <Text className="text-xl font-bold text-gray-700">
+              Mark Attendance for this batch
+            </Text>
+          </TouchableOpacity>
+        )}
         {/* Students List */}
-        {isLoading ? <LoadingSection /> : <BatchStudentList />}
+        {isBatchDetailsPage ? (
+          isLoading ? (
+            <LoadingSection />
+          ) : (
+            <BatchStudentList />
+          )
+        ) : isLoading ? (
+          <LoadingSection />
+        ) : (
+          <AttendanceList />
+        )}
       </View>
     )
   );
