@@ -16,11 +16,11 @@ export const markAttendance = expressAsyncHandler(async (req, res, next) => {
         const { date, batchId, records } = req.body;
 
         if (!req.body) {
-            return res.status(400).json({ message: 'Request body is empty' });
+            return res.status(400).json({ error: 'Request body is empty' });
         }
 
         if (!batchId || !date || !records || !Array.isArray(records) || records.length === 0) {
-            return res.status(400).json({ message: "BatchId , Date and records are required" })
+            return res.status(400).json({ error: "BatchId , Date and records are required" })
         }
 
         // Prevent marking attendance on Sundays
@@ -32,12 +32,12 @@ export const markAttendance = expressAsyncHandler(async (req, res, next) => {
         // check for the batch if it exists
         const batch = await BatchModel.findById(batchId);
         if (!batch) {
-            return res.status(404).json({ message: "Batch not found" });
+            return res.status(404).json({ error: "Batch not found" });
         }
 
         // check if the current user is the teacher of that batch or not
         if (batch.teacherId.toString() !== user._id.toString()) {
-            return res.status(403).json({ message: "You are not authorized to mark attendance for this batch" });
+            return res.status(403).json({ error: "You are not authorized to mark attendance for this batch" });
         }
 
         // 4. Normalize date to midnight for consistent database queries
@@ -48,24 +48,24 @@ export const markAttendance = expressAsyncHandler(async (req, res, next) => {
         const studentIds = records.map(record => record.studentId);
         const duplicateStudentIds = studentIds.filter((studentId, index) => studentIds.indexOf(studentId) !== index);
         if (duplicateStudentIds.length > 0) {
-            return res.status(400).json({ message: `Duplicate studentIds: ${duplicateStudentIds.join(", ")}` });
+            return res.status(400).json({ error: `Duplicate studentIds: ${duplicateStudentIds.join(", ")}` });
         }
 
         // check if the records and batch are of same length
         if (records.length !== batch.students.length) {
-            return res.status(400).json({ message: "Exact number of students in the attendance are required" });
+            return res.status(400).json({ error: "Exact number of students in the attendance are required" });
         }
 
         // check whether all the studentIds are in the batch or not
         const invalidStudentIds = studentIds.filter(studentId => !batch.students.includes(studentId));
         if (invalidStudentIds.length > 0) {
-            return res.status(400).json({ message: `Invalid studentIds: ${invalidStudentIds.join(", ")}` });
+            return res.status(400).json({ error: `Invalid studentIds: ${invalidStudentIds.join(", ")}` });
         }
 
         // check for the status of every record that it is (present, absent or leave)
         const invalidStatuses = records.filter(record => record.status !== "present" && record.status !== "absent" && record.status !== "leave");
         if (invalidStatuses.length > 0) {
-            return res.status(400).json({ message: `Invalid statuses: ${invalidStatuses.map(record => record.status).join(", ")}` });
+            return res.status(400).json({ error: `Invalid statuses: ${invalidStatuses.map(record => record.status).join(", ")}` });
         }
 
         const attendanceDocument = await AttendanceModel.findOneAndUpdate(
@@ -104,18 +104,18 @@ export const updateAttendanceofPerticularStudent = expressAsyncHandler(async (re
         const user = req.user;
 
         if (!studentId || !batchId || !date || !status) {
-            return res.status(400).json({ message: "StudentId, BatchId, Date and Status are required" });
+            return res.status(400).json({ error: "StudentId, BatchId, Date and Status are required" });
         }
 
         // check for the batch if it exists
         const batch = await BatchModel.findById(batchId);
         if (!batch) {
-            return res.status(404).json({ message: "Batch not found" });
+            return res.status(404).json({ error: "Batch not found" });
         }
 
         // check whether the current user is the teacher of the perticular batch or not
         if (batch.teacherId.toString() !== user._id.toString()) {
-            return res.status(403).json({ message: "You are not authorized to update attendance for this batch" });
+            return res.status(403).json({ error: "You are not authorized to update attendance for this batch" });
         }
 
         // check if the student is the student of the perticular batch
@@ -130,7 +130,7 @@ export const updateAttendanceofPerticularStudent = expressAsyncHandler(async (re
         // check that the attendance was there in the perticular date
         const attendance = await AttendanceModel.findOne({ batchId, date: startOfDay });
         if (!attendance) {
-            return res.status(404).json({ message: "Attendance not found" });
+            return res.status(404).json({ error: "Attendance not found" });
         }
 
         // update the attendance
@@ -177,7 +177,7 @@ export const getAttendanceofAllStudents = expressAsyncHandler(async (req, res, n
             .populate('records.studentId', "name")
             .populate("batchId", "name");
         if (!attendance) {
-            return res.status(404).json({ message: "Attendance not found" });
+            return res.status(404).json({ error: "Attendance not found" });
         }
         return res.status(200).json({ attendance });
     } catch (error) {
@@ -193,7 +193,7 @@ export const getAttendanceForStudent = expressAsyncHandler(async (req, res, next
         const { month } = req.params;
 
         if (!month) {
-            return res.status(400).json({ message: "Month is required" });
+            return res.status(400).json({ error: "Month is required" });
         }
 
         // get the attendance of the student for the month
@@ -287,7 +287,7 @@ export const getAttendanceForStudent = expressAsyncHandler(async (req, res, next
         ]);
 
         if (!attendance) {
-            return res.status(404).json({ message: "Attendance not found" });
+            return res.status(404).json({ error: "Attendance not found" });
         }
 
         // now I want to count the attendance of the students
