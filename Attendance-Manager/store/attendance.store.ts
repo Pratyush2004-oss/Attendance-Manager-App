@@ -61,7 +61,6 @@ export const useAttendanceStore = create<AttendanceStoreInterface>(
     getAttendanceforStudent: async (month, token) => {
       set({ isLoading: true, attendanceForStudent: null });
       try {
-        console.log(month);
         const response = await axios.get(
           AttendanceApis.getAttendanceForStudents.replace(":month", month),
           {

@@ -8,9 +8,7 @@ import { generateVerificationToken } from "../service/generateVerificatonToken.j
 import { sendResetOtp, sendVerificationEmail } from "../service/emailService.js";
 
 const generateToken = (id) => {
-    return jwt.sign({ id }, ENV.JWT_SECRET, {
-        expiresIn: "7d"
-    });
+    return jwt.sign({ id }, ENV.JWT_SECRET);
 }
 
 export const registerUser = expressAsyncHandler(async (req, res, next) => {

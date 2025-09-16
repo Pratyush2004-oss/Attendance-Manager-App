@@ -10,8 +10,7 @@ const BatchFlatList = () => {
   const [searchInput, setSearchInput] = useState("");
   const { getListOfAllBatches } = useStudentHook();
   const getBatchList = async () => {
-    const batches = await getListOfAllBatches();
-    setBatchList(batches);
+    await getListOfAllBatches().then((res) => setBatchList(res));
   };
   useEffect(() => {
     getBatchList();
@@ -28,7 +27,7 @@ const BatchFlatList = () => {
   return (
     <>
       {/* Search Bar */}
-      {BatchList && BatchList.length > 0 && (
+      {BatchList && BatchList?.length > 0 && (
         <SearchBar searchInput={searchInput} setSearchInput={setSearchInput} />
       )}
       <FlatList
@@ -41,7 +40,7 @@ const BatchFlatList = () => {
           <View className="mt-5">
             <View className="flex-row items-center justify-between">
               <Text className="text-3xl font-bold text-center">
-                Your Batches ({BatchList.length})
+                Your Batches ({BatchList?.length})
               </Text>
             </View>
           </View>
