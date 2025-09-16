@@ -7,6 +7,6 @@ const router = express.Router();
 router.post("/mark-attendance", AuthMiddleware, VerifyTeacher, markAttendance);
 router.get("/get-attendance-for-student/:month", AuthMiddleware, VerifyStudent, getAttendanceForStudent);
 router.post("/get-attendance-of-all-students", AuthMiddleware, VerifyTeacher, getAttendanceofAllStudents);
-router.post("/update-status-of-student-in-attendance" , AuthMiddleware, VerifyTeacher, updateAttendanceofPerticularStudent);
+router.put("/update-status-of-student-in-attendance" , AuthMiddleware, VerifyTeacher, updateAttendanceofPerticularStudent);
 
 export default router;

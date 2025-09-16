@@ -168,14 +168,17 @@ export const getAttendanceofAllStudents = expressAsyncHandler(async (req, res, n
     const { batchId, date } = req.body;
 
     if (!batchId || !date) {
-        return res.status(400).json({ message: "BatchId and Date are required" });
+        return res.status(400).json({ error: "BatchId and Date are required" });
     }
-
+    const isSunday = new Date(date).getDay() === 0;
+    if (isSunday) {
+        return res.status(400).json({ error: "Sunday is a holiday" });
+    }
     try {
         const attendance = await AttendanceModel.findOne({ batchId, date })
             .select("records batchId date")
-            .populate('records.studentId', "name")
-            .populate("batchId", "name");
+            .populate('records.studentId', { name: 1 })
+            .populate("batchId", { name: 1, _id: 0 });
         if (!attendance) {
             return res.status(404).json({ error: "Attendance not found" });
         }
