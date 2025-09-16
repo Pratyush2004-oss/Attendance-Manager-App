@@ -9,7 +9,7 @@ import {
   Modal,
   Pressable,
   Text,
-  View
+  View,
 } from "react-native";
 
 const TeacherActionModal = ({
@@ -20,13 +20,17 @@ const TeacherActionModal = ({
   setSelectedTeacher: React.Dispatch<React.SetStateAction<Teacher | null>>;
 }) => {
   const [isLoading, setisLoading] = useState(false);
-  const { deleteTeacherFromOrganization, verifyTeacher } =
+  const { deleteTeacherFromOrganization, verifyTeacher, selectedOrganization } =
     useOrganizationStore();
   const { token } = useUserStore();
   const handleVerify = async () => {
     try {
       setisLoading(true);
-      await verifyTeacher(selectedTeacher._id, token as string);
+      await verifyTeacher(
+        selectedTeacher._id,
+        selectedOrganization?._id as string,
+        token as string
+      );
       setSelectedTeacher(null);
     } catch (error) {
     } finally {
@@ -36,7 +40,11 @@ const TeacherActionModal = ({
 
   const handleRemove = async () => {
     try {
-      await deleteTeacherFromOrganization(selectedTeacher._id, token as string);
+      await deleteTeacherFromOrganization(
+        selectedTeacher._id,
+        selectedOrganization?._id as string,
+        token as string
+      );
       setSelectedTeacher(null);
     } catch (error) {
     } finally {
@@ -79,11 +87,11 @@ const TeacherActionModal = ({
                 <>
                   <Pressable
                     className="px-5 py-2 rounded-full bg-green-500/70"
-                    disabled={selectedTeacher.isTeacherVerified}
+                    disabled={selectedTeacher.organization.isTeacherVerified}
                     onPress={handleVerify}
                   >
                     <Text className="text-xl text-white">
-                      {selectedTeacher.isTeacherVerified
+                      {selectedTeacher.organization.isTeacherVerified
                         ? "Verified"
                         : "Verify"}
                     </Text>

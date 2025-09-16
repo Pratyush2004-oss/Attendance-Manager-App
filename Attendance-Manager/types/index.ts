@@ -81,7 +81,9 @@ export type Teacher = {
   _id: string;
   name: string;
   email: string;
-  isTeacherVerified: boolean;
+  organization: {
+    isTeacherVerified: boolean;
+  };
 };
 
 export type StudentType = {
@@ -128,6 +130,11 @@ export type OrganizationType = {
   isTeacherVerified: boolean;
 };
 
+export type OrganizationForAdmin = {
+  _id: string;
+  name: string;
+};
+
 export type MarkAttendaneInputType = {
   batchId: string;
   date: Date;
@@ -144,7 +151,7 @@ export interface AttendanceForStudentType {
   absentDays: number;
   leaveDays: number;
   attendanceRecords: AttendaceRecordType[];
-};
+}
 
 export type AttendaceRecordType = {
   date: Date;

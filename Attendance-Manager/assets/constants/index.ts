@@ -28,9 +28,10 @@ export const batchApis = {
 
 export const OrganizationApis = {
   getOrganizationList: `${BASE_URL}/api/organization/get-organization-list`,
-  verifyTeacher: `${BASE_URL}/api/organization/verify-teachers/:teacherId`,
+  verifyTeacher: `${BASE_URL}/api/organization/verify-teachers`,
+  getOrganizationForAdmins: `${BASE_URL}/api/organization/get-organizations-for-admins`,
   checkOrganizationAdmin: `${BASE_URL}/api/organization/check-organization-admin`,
-  getAllTeachers: `${BASE_URL}/api/organization/get-all-teacher-list`,
+  getAllTeachersOfOrganization: `${BASE_URL}/api/organization/get-all-teacher-list/:organizationId`,
   deleteTeacher: `${BASE_URL}/api/organization/delete-teaher-account/:teacherId`,
 };
 
