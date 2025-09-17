@@ -1,26 +1,22 @@
-import { BatchForTeacherType } from "@/types";
+import { useBatchStore } from "@/store/batch.store";
+import { useUserStore } from "@/store/userStore";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { FlatList, Image, Text, Pressable, View } from "react-native";
+import { FlatList, Image, Pressable, Text, View } from "react-native";
 import SearchBar from "../shared/SearchBar";
-import { useBatchStore } from "@/store/batch.store";
 
-const BatchFlatList = ({
-  BatchList,
-  getBatchList,
-}: {
-  BatchList: BatchForTeacherType[];
-  getBatchList: () => Promise<void>;
-}) => {
+const BatchFlatList = () => {
   const [searchInput, setSearchInput] = useState("");
+  const { token } = useUserStore();
   const router = useRouter();
-  const { setSelectedBatch } = useBatchStore();
+  const { setSelectedBatch, getBatchListForTeacher, batchListForTeacher } =
+    useBatchStore();
   useEffect(() => {
-    BatchList.length === 0 && getBatchList();
+    getBatchListForTeacher(token as string);
   }, []);
   const filteredList = () => {
-    return BatchList.filter((item) => {
+    return batchListForTeacher.filter((item) => {
       return (
         item.name.toLowerCase().includes(searchInput.toLowerCase()) ||
         item.Organization.name.toLowerCase().includes(searchInput.toLowerCase())
@@ -30,20 +26,20 @@ const BatchFlatList = ({
   return (
     <>
       {/* Search Bar */}
-      {BatchList && BatchList.length > 0 && (
+      {batchListForTeacher && batchListForTeacher.length > 0 && (
         <SearchBar searchInput={searchInput} setSearchInput={setSearchInput} />
       )}
       <FlatList
         className="flex-1 px-4 bg-gray-100"
         contentContainerStyle={{ paddingBottom: 20 }}
-        data={searchInput ? filteredList() : BatchList}
+        data={searchInput ? filteredList() : batchListForTeacher}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item._id}
         ListHeaderComponent={() => (
           <View className="mt-5">
             <View className="flex-row items-center justify-between">
               <Text className="text-3xl font-bold text-center">
-                Your Batches ({BatchList.length})
+                Your Batches ({batchListForTeacher.length})
               </Text>
             </View>
           </View>

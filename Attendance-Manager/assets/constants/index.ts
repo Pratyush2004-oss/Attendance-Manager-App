@@ -38,6 +38,8 @@ export const OrganizationApis = {
 export const AttendanceApis = {
   markAttendace: `${BASE_URL}/api/attendance/mark-attendance`,
   getAttendanceForStudents: `${BASE_URL}/api/attendance/get-attendance-for-student/:month`,
+  getAttendanceOfAllStudents: `${BASE_URL}/api/attendance/get-attendance-of-all-students`,
+  updateStatusofStudentInAttendance: `${BASE_URL}/api/attendance/update-status-of-student-in-attendance`,
 };
 
 export const NavigationOptions = [

@@ -3,8 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 const ProfilePage = () => {
-  const { user, token } = useUserStore();
-  console.log(token)
+  const { user } = useUserStore();
   return (
     user && (
       <View className="relative items-center justify-around flex-1">

@@ -68,7 +68,6 @@ export const useOrganizationStore = create<OrganizationStoreInterface>(
         if (teachers.status === 400) throw new Error(teachers.data.error);
         set({ teachers: teachers.data.teachers });
       } catch (error: any) {
-        console.log(error.response);
       } finally {
         set({ isLoading: false });
       }

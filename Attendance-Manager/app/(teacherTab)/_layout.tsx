@@ -1,14 +1,25 @@
-import { View } from "react-native";
-import React, { useState } from "react";
-import TabHeader from "@/components/shared/TabHeader";
 import Sidebar from "@/components/shared/Sidebar";
-import { Tabs } from "expo-router";
+import TabHeader from "@/components/shared/TabHeader";
+import { useBatchStore } from "@/store/batch.store";
+import { useUserStore } from "@/store/userStore";
 import { AntDesign, Feather } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TeacherTabLayout = () => {
   const [sidebarVisible, setsidebarVisible] = useState(false);
   const insets = useSafeAreaInsets();
+  const { getBatchListForTeacher } = useBatchStore();
+  const { token } = useUserStore();
+
+  const getBatchList = async () => {
+    await getBatchListForTeacher(token as string);
+  };
+  useEffect(() => {
+    getBatchList();
+  }, []);
   return (
     <View className="flex-1 bg-white">
       <TabHeader onSidebarPress={() => setsidebarVisible(true)} />

@@ -1,17 +1,18 @@
-import useStudentHook from "@/hooks/UseStudentHook";
+import { useBatchStore } from "@/store/batch.store";
 import { AllBatchesType, JoinBatchInputType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   Image,
   Modal,
-  Text,
   Pressable,
+  Text,
   View,
 } from "react-native";
 import OtpVerification from "../auth/OtpVerification";
-import { useRouter } from "expo-router";
+import { useUserStore } from "@/store/userStore";
 
 const BatchModal = ({
   selectedBatch,
@@ -24,7 +25,8 @@ const BatchModal = ({
     batchId: selectedBatch._id,
     batchJoiningCode: "",
   });
-  const { joinBatch } = useStudentHook();
+  const { joinBatch } = useBatchStore();
+  const { token } = useUserStore();
   const [isLoading, setisLoading] = useState(false);
   const router = useRouter();
 
@@ -36,7 +38,7 @@ const BatchModal = ({
   const handleSubmit = async () => {
     try {
       setisLoading(true);
-      const res = await joinBatch(input);
+      const res = await joinBatch(input, token as string);
       if (res) {
         setInput({ batchId: "", batchJoiningCode: "" });
         router.replace("/(studentTab)/batches");

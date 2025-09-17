@@ -157,3 +157,27 @@ export type AttendaceRecordType = {
   date: Date;
   status: "present" | "absent" | "leave";
 };
+
+export type AttendanceForTeacherType = {
+  _id: string;
+  batchId: {
+    name: string;
+  };
+  date: Date;
+  records: RecordType[];
+};
+
+export type RecordType = {
+  studentId: {
+    name: string;
+    _id: string;
+  };
+  status: "present" | "absent" | "leave";
+};
+
+export type updateStudentAttendanceInputType = {
+  studentId: string;
+  batchId: string;
+  status: "present" | "absent" | "leave";
+  date: Date;
+};

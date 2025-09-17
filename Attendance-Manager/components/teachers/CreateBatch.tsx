@@ -1,4 +1,4 @@
-import useTeacherHook from "@/hooks/UseTeacherHook";
+import { useBatchStore } from "@/store/batch.store";
 import { useUserStore } from "@/store/userStore";
 import { CreateBatchInputType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,13 +7,13 @@ import React, { useState } from "react";
 import {
   ActivityIndicator,
   Modal,
+  Pressable,
   Text,
   TextInput,
-  Pressable,
   View,
 } from "react-native";
 
-const CreateBatch = ({ refreshList }: { refreshList: () => Promise<void> }) => {
+const CreateBatch = () => {
   const { user } = useUserStore();
   const [showModal, setshowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,8 @@ const CreateBatch = ({ refreshList }: { refreshList: () => Promise<void> }) => {
     name: "",
     Organization: "",
   });
-  const { createBatch } = useTeacherHook();
+  const { createBatch } = useBatchStore();
+  const { token } = useUserStore();
   const handleSelectOrganization = (itemValue: string) => {
     setInput({ ...input, Organization: itemValue });
   };
@@ -37,9 +38,8 @@ const CreateBatch = ({ refreshList }: { refreshList: () => Promise<void> }) => {
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      const res = await createBatch(input);
+      const res = await createBatch(input, token as string);
       if (res) {
-        await refreshList();
         handleCloseModal();
       }
     } catch (error) {

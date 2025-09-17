@@ -1,23 +1,23 @@
-import useStudentHook from "@/hooks/UseStudentHook";
-import { BatchForStudentType } from "@/types";
+import { useBatchStore } from "@/store/batch.store";
+import { useUserStore } from "@/store/userStore";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { FlatList, Image, Text, Pressable, View } from "react-native";
+import { FlatList, Image, Pressable, Text, View } from "react-native";
 import SearchBar from "../shared/SearchBar";
 
 const BatchFlatList = () => {
-  const [BatchList, setBatchList] = useState<BatchForStudentType[]>([]);
   const [searchInput, setSearchInput] = useState("");
-  const { getListOfAllBatches } = useStudentHook();
+  const { getBatchListForStudent, batchListforStudents } = useBatchStore();
+  const { token } = useUserStore();
   const getBatchList = async () => {
-    await getListOfAllBatches().then((res) => setBatchList(res));
+    await getBatchListForStudent(token as string);
   };
   useEffect(() => {
     getBatchList();
-  }, [BatchList]);
+  }, []);
 
   const filteredList = () => {
-    return BatchList.filter((item) => {
+    return batchListforStudents.filter((item) => {
       return (
         item.name.toLowerCase().includes(searchInput.toLowerCase()) ||
         item.Organization.name.toLowerCase().includes(searchInput.toLowerCase())
@@ -27,20 +27,20 @@ const BatchFlatList = () => {
   return (
     <>
       {/* Search Bar */}
-      {BatchList && BatchList?.length > 0 && (
+      {batchListforStudents && batchListforStudents?.length > 0 && (
         <SearchBar searchInput={searchInput} setSearchInput={setSearchInput} />
       )}
       <FlatList
         className="flex-1 px-4 bg-gray-100"
         contentContainerStyle={{ paddingBottom: 20 }}
-        data={searchInput ? filteredList() : BatchList}
+        data={searchInput ? filteredList() : batchListforStudents}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item._id}
         ListHeaderComponent={() => (
           <View className="mt-5">
             <View className="flex-row items-center justify-between">
               <Text className="text-3xl font-bold text-center">
-                Your Batches ({BatchList?.length})
+                Your Batches ({batchListforStudents?.length})
               </Text>
             </View>
           </View>
