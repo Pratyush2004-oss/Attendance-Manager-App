@@ -218,7 +218,10 @@ export const leaveBatch = expressasyncHandler(async (req, res, next) => {
 
         // Remove the user's attendance records for this batch
         await AttendanceModel.updateMany(
-            { batchId: batchId },
+            {
+                batchId: batchId,
+                "records.studentId": studentId
+            },
             { $pull: { records: { studentId: user._id } } }
         );
 

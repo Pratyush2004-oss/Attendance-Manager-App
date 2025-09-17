@@ -61,7 +61,7 @@ const MonthDateInput = () => {
           disabled={!monthYear.month || !monthYear.year || isLoading}
           onPress={() => handleSearch()}
         >
-          <Text className="text-lg font-semibold text-center text-gray-900 disabled:text-gray-500">
+          <Text className="text-lg font-semibold text-center text-white disabled:text-gray-500">
             {isLoading ? (
               <ActivityIndicator color="white" size={"small"} />
             ) : (

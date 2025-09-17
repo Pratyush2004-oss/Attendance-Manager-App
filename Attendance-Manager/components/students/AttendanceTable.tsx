@@ -2,7 +2,7 @@
 
 import { AttendanceForStudentType } from "@/types";
 import React, { useMemo } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 
 // Import your type definitions
 
@@ -46,18 +46,33 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
         {/* ======================= */}
         <View className="flex-row">
           {/* Top-left empty corner cell */}
-          <View className="items-center justify-center w-56 p-3 bg-gray-200 border-b border-r border-gray-300">
+          <View className="items-center justify-center w-56 p-3 bg-gray-200 border-b-4 border-r-4 border-gray-300">
             <Text className="font-bold text-gray-700">Batch</Text>
           </View>
           {/* Mapping through dates to create date columns */}
           {dates.map((date) => (
             <View
               key={date.toISOString()}
-              className="items-center justify-center w-12 h-12 p-2 bg-gray-200 border-b border-r border-gray-300"
+              className="items-center justify-center w-12 h-12 p-2 bg-gray-200 border-b-4 border-r border-gray-300"
             >
               <Text className="font-bold text-gray-700">{date.getDate()}</Text>
             </View>
           ))}
+          {/* Stats of the Attendance */}
+          <View className="items-center justify-center w-24 p-3 bg-gray-200 border-b-4 border-l-4 border-gray-300">
+            <Text className="font-bold text-gray-700">Present</Text>
+          </View>
+          <View className="items-center justify-center w-24 p-3 bg-gray-200 border-b-4 border-gray-300">
+            <Text className="font-bold text-gray-700">Absent</Text>
+          </View>
+          <View className="items-center justify-center w-24 p-3 bg-gray-200 border-b-4 border-r-4 border-gray-300">
+            <Text className="font-bold text-gray-700">Leave</Text>
+          </View>
+          <View className="items-center justify-center w-48 p-3 bg-gray-200 border-b-4 border-r border-gray-300">
+            <Text className="font-bold text-gray-700">
+              Attencance Percentage
+            </Text>
+          </View>
         </View>
 
         {/* ======================= */}
@@ -86,10 +101,31 @@ const AttendanceRow: React.FC<{
     return map;
   }, [batch.attendanceRecords]);
 
+  const AttendancePercentage = () => {
+    const presentCount = batch.attendanceRecords.filter(
+      (record) => record.status === "present"
+    ).length;
+    const totalCount = batch.attendanceRecords.filter(
+      (record) => record.status !== "leave"
+    ).length;
+    const percentage = (presentCount / totalCount) * 100;
+    return percentage.toFixed(2);
+  };
+
+  const TextColor = () => {
+    if (parseFloat(AttendancePercentage()) > 75) {
+      return "text-green-600/90";
+    } else if (parseFloat(AttendancePercentage()) > 50) {
+      return "text-yellow-600/90";
+    } else {
+      return "text-red-600/90";
+    }
+  };
+
   return (
     <View className="flex-row">
       {/* Batch Name Cell (Row Header) */}
-      <View className="items-center justify-center w-56 p-3 bg-gray-200 border-b border-r border-gray-300">
+      <View className="items-center justify-center w-56 p-3 bg-gray-200 border-b border-r-4 border-gray-300">
         <Text className="font-semibold text-gray-600">{batch.batchName}</Text>
       </View>
 
@@ -117,6 +153,22 @@ const AttendanceRow: React.FC<{
           </View>
         );
       })}
+
+      {/* Stats */}
+      <View className="items-center justify-center w-24 h-12 p-2 bg-white border-b border-l-4 border-r border-gray-300">
+        <Text className={`font-bold text-green-600`}>{batch.presentDays}</Text>
+      </View>
+      <View className="items-center justify-center w-24 h-12 p-2 bg-white border-b border-r border-gray-300">
+        <Text className={`font-bold text-red-500`}>{batch.absentDays}</Text>
+      </View>
+      <View className="items-center justify-center w-24 h-12 p-2 bg-white border-b border-r-4 border-gray-300">
+        <Text className={`font-bold text-yellow-600`}>{batch.leaveDays}</Text>
+      </View>
+      <View className="items-center justify-center w-48 h-12 p-2 bg-white border-b border-r border-gray-300">
+        <Text className={`font-bold ${TextColor()}`}>
+          {AttendancePercentage()}%
+        </Text>
+      </View>
     </View>
   );
 };
