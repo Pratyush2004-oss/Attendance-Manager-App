@@ -153,7 +153,6 @@ export const updateAttendanceofPerticularStudent = expressAsyncHandler(async (re
         );
         res.status(200).json({
             message: 'Attendance updated successfully.',
-            data: updatedAttendance,
         });
 
     } catch (error) {
