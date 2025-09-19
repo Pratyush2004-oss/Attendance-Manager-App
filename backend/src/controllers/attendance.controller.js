@@ -134,7 +134,7 @@ export const updateAttendanceofPerticularStudent = expressAsyncHandler(async (re
         }
 
         // update the attendance
-        const updatedAttendance = await AttendanceModel.findOneAndUpdate(
+        await AttendanceModel.findOneAndUpdate(
             {
                 batchId: batchId,
                 date: startOfDay,
