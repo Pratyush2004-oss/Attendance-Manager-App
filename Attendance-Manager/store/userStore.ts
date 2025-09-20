@@ -26,7 +26,7 @@ interface UserStoreInterface {
     resetPasswordInput: resetPasswordInputType
   ) => Promise<boolean>;
   logout: () => void;
-  reset: () => void;
+  resetUserRecord: () => void;
 }
 
 export const useUserStore = create<UserStoreInterface>((set) => ({
@@ -269,12 +269,13 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
     }
   },
   //   reset controller
-  reset: () => {
+  resetUserRecord: () => {
     set({
       isAuthenticated: false,
       isAdmin: false,
       user: null,
       token: null,
+      isOrganizationAdmin: false,
     });
   },
 }));

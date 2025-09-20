@@ -5,6 +5,14 @@ import cloudinary from '../config/cloudinary.js';
 import streamifier from 'streamifier';
 import mongoose from 'mongoose';
 
+
+// Helper function to determine resource type
+const getResourceType = (mimetype) => {
+    if (mimetype.startsWith('image')) return 'image';
+    // For PDFs, DOCX, etc., we use 'raw'
+    return 'raw';
+};
+
 // create homework by the teacher of that batch
 export const createAssignment = expressasyncHandler(async (req, res, next) => {
     try {
@@ -41,13 +49,13 @@ export const createAssignment = expressasyncHandler(async (req, res, next) => {
         }
         // now upload the files to cloudinary
         const uploadPromises = req.files.map(file => {
+            const resourceType = getResourceType(file.mimetype);
             return new Promise((resolve, reject) => {
                 const cld_upload_stream = cloudinary.uploader.upload_stream({
-                    resource_type: 'auto', // Assuming multiple files are images
+                    resource_type: resourceType, // Assuming multiple files are images
                     folder: 'Attendacne-Manager'
                 }, (error, result) => {
                     if (error) {
-                        console.error('Cloudinary Upload Error:', error);
                         reject(error);
                     } else {
                         resolve(result.secure_url);

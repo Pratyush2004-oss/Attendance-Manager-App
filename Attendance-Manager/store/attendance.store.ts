@@ -38,6 +38,7 @@ interface AttendanceStoreInterface {
     input: updateStudentAttendanceInputType,
     token: string
   ) => Promise<boolean>;
+  resetAttendanceData: () => void;
 }
 
 export const useAttendanceStore = create<AttendanceStoreInterface>(
@@ -49,9 +50,10 @@ export const useAttendanceStore = create<AttendanceStoreInterface>(
       year: "",
     },
     attendaceOfAllStudents: null,
-    setMonthYear: (monthYear) => set({ monthYear }),
     attendanceForStudent: null,
     updateStatusInput: null,
+    // set month year
+    setMonthYear: (monthYear) => set({ monthYear }),
     // mark attendance
     markAttendace: async (input, token) => {
       set({ isLoading: true });
@@ -155,5 +157,19 @@ export const useAttendanceStore = create<AttendanceStoreInterface>(
         return false;
       }
     },
+
+    // reset all data
+    resetAttendanceData: () =>
+      set({
+        attendaceOfAllStudents: null,
+        updateStatusInput: null,
+        attendanceForStudent: null,
+        isLoading: false,
+        monthYear: {
+          monthString: "",
+          month: "",
+          year: "",
+        },
+      }),
   })
 );

@@ -32,16 +32,17 @@ interface BatchStoreInterface {
     token: string
   ) => Promise<boolean>;
   joinBatch: (input: JoinBatchInputType, token: string) => Promise<boolean>;
+  resetBatchRecords: () => void;
 }
 
 export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
   selectedBatch: null,
   batchListForTeacher: [],
-  setSelectedBatch: (batch) => set({ selectedBatch: batch }),
   batchStudentList: [],
   isLoading: false,
   batchListforStudents: [],
-
+  // set selected batch
+  setSelectedBatch: (batch) => set({ selectedBatch: batch }),
   // get batchList for student
   getBatchListForStudent: async (token) => {
     try {
@@ -214,4 +215,13 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
       return false;
     }
   },
+  // reset All batch Records
+  resetBatchRecords: () =>
+    set({
+      batchListforStudents: [],
+      batchStudentList: [],
+      batchListForTeacher: [],
+      selectedBatch: null,
+      isLoading: false,
+    }),
 }));

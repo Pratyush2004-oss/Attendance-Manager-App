@@ -22,6 +22,7 @@ interface OrganizationStoreInterface {
     organizationId: string,
     token: string
   ) => Promise<void>;
+  resetOrganizationRecords: () => void;
 }
 
 export const useOrganizationStore = create<OrganizationStoreInterface>(
@@ -30,8 +31,11 @@ export const useOrganizationStore = create<OrganizationStoreInterface>(
     selectedOrganization: null,
     isLoading: false,
     OrganizationList: [],
+    // set selected organization
     setSelectedOrganization: (organization) =>
       set({ selectedOrganization: organization }),
+
+    // get all the organizations list
     getOrganizationList: async (token) => {
       set({ isLoading: true });
       try {
@@ -50,6 +54,7 @@ export const useOrganizationStore = create<OrganizationStoreInterface>(
         set({ isLoading: false });
       }
     },
+    // get all the teachers of the Organization
     getAllTeachers: async (organizaitionId: string, token: string) => {
       if (!token) return;
       try {
@@ -72,6 +77,7 @@ export const useOrganizationStore = create<OrganizationStoreInterface>(
         set({ isLoading: false });
       }
     },
+    // verify teacher of the Organization
     verifyTeacher: async (teacherId, organizationId, token) => {
       if (!token || !teacherId) return;
       try {
@@ -92,6 +98,7 @@ export const useOrganizationStore = create<OrganizationStoreInterface>(
         else Alert.alert("Error", error.message);
       }
     },
+    // delete the teacher from the organization 
     deleteTeacherFromOrganization: async (organizationId, teacherId, token) => {
       if (!token || !teacherId) return;
       try {
@@ -111,5 +118,13 @@ export const useOrganizationStore = create<OrganizationStoreInterface>(
         else Alert.alert("Error", error.message);
       }
     },
+    // reset controller
+    resetOrganizationRecords: () =>
+      set({
+        teachers: [],
+        isLoading: false,
+        selectedOrganization: null,
+        OrganizationList: [],
+      }),
   })
 );

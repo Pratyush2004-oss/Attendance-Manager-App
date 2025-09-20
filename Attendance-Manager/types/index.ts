@@ -1,3 +1,5 @@
+import { DocumentPickerAsset } from "expo-document-picker";
+
 export type loginInputType = {
   email: string;
   password: string;
@@ -180,4 +182,21 @@ export type updateStudentAttendanceInputType = {
   batchId: string;
   status: "present" | "absent" | "leave";
   date: Date;
+};
+
+export type BatchAssignmentType = {
+  _id: string;
+  homework: string[];
+  createdAt: string;
+};
+
+export type TodaysAssignmentType = {
+  _id: string;
+  homework: string[];
+  batchName: string;
+};
+
+export type CreateAssignmentInputType = {
+  batchIds: string[];
+  files: (File | DocumentPickerAsset)[];
 };

@@ -42,6 +42,13 @@ export const AttendanceApis = {
   updateStatusofStudentInAttendance: `${BASE_URL}/api/attendance/update-status-of-student-in-attendance`,
 };
 
+// assignment Routes
+export const AssignmentApis = {
+  createAssignment: `${BASE_URL}/api/assignment/create-assignment`,
+  getTodayAssignment: `${BASE_URL}/api/assignment/get-assignments-of-today`,
+  getBatchAssignment: `${BASE_URL}/api/assignment/get-assignment/:batchId`,
+};
+
 export const NavigationOptions = [
   {
     category: "Batches",
