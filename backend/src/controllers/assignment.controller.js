@@ -53,7 +53,8 @@ export const createAssignment = expressasyncHandler(async (req, res, next) => {
             return new Promise((resolve, reject) => {
                 const cld_upload_stream = cloudinary.uploader.upload_stream({
                     resource_type: resourceType, // Assuming multiple files are images
-                    folder: 'Attendacne-Manager'
+                    folder: 'Attendacne-Manager',
+                    use_filename: true
                 }, (error, result) => {
                     if (error) {
                         reject(error);
