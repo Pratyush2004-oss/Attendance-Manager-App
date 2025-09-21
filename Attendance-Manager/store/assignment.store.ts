@@ -90,7 +90,6 @@ export const useAssignmentStore = create<AssignmentStoreInterface>(
           }
         );
         // --- END OF FIX ---
-        console.log(formData);
 
         const response = await axios.post(
           AssignmentApis.createAssignment,

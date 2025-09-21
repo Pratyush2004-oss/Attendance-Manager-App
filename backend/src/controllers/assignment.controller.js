@@ -4,8 +4,7 @@ import AssignmentModel from '../models/assignment.model.js';
 import cloudinary from '../config/cloudinary.js';
 import streamifier from 'streamifier';
 import mongoose from 'mongoose';
-
-
+import path from 'path';
 // Helper function to determine resource type
 const getResourceType = (mimetype) => {
     if (mimetype.startsWith('image')) return 'image';
@@ -48,15 +47,28 @@ export const createAssignment = expressasyncHandler(async (req, res, next) => {
             }
         }
         // now upload the files to cloudinary
+        // ... inside your createAssignment controller ...
+
         const uploadPromises = req.files.map(file => {
-            const resourceType = getResourceType(file.mimetype);
+            const resourceType = getResourceType(file.mimetype); // Your helper function
+
+            // --- THE CORRECT FIX ---
+            // For 'raw' files, the public_id MUST include the file extension.
+            // We simply use the full originalname provided by Multer.
+            const publicId = file.originalname;
+            
             return new Promise((resolve, reject) => {
                 const cld_upload_stream = cloudinary.uploader.upload_stream({
-                    resource_type: resourceType, // Assuming multiple files are images
+                    resource_type: resourceType,
                     folder: 'Attendacne-Manager',
-                    use_filename: true
+                    // Use the full filename as the public_id
+                    public_id: publicId,
+                    // This prevents files with the same name from overwriting each other.
+                    // Cloudinary will add a random suffix if a file with this name already exists.
+                    overwrite: false
                 }, (error, result) => {
                     if (error) {
+                        console.error('Cloudinary Upload Error:', error);
                         reject(error);
                     } else {
                         resolve(result.secure_url);
@@ -65,6 +77,8 @@ export const createAssignment = expressasyncHandler(async (req, res, next) => {
                 streamifier.createReadStream(file.buffer).pipe(cld_upload_stream);
             });
         });
+
+        // ... rest of your controller logic ...
 
         // wait for all uploads to complete
         try {

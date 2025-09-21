@@ -17,10 +17,8 @@ const Assignments = () => {
   const handleUpload = async () => {
     setisLoading(true);
     await createAssignment(input, token as string)
-      .then((res) => {
-        if (res) {
-          setInput({ batchIds: [], files: [] });
-        }
+      .then(() => {
+        setInput({ batchIds: [], files: [] });
       })
       .catch()
       .finally(() => setisLoading(false));
