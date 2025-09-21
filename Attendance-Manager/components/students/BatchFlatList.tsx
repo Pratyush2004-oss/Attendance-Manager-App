@@ -4,11 +4,15 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 import SearchBar from "../shared/SearchBar";
+import { useAssignmentStore } from "@/store/assignment.store";
+import { useRouter } from "expo-router";
 
 const BatchFlatList = () => {
   const [searchInput, setSearchInput] = useState("");
   const { getBatchListForStudent, batchListforStudents } = useBatchStore();
+  const router = useRouter();
   const { token } = useUserStore();
+  const { setSelectedBatch } = useAssignmentStore();
   const getBatchList = async () => {
     await getBatchListForStudent(token as string);
   };
@@ -23,6 +27,12 @@ const BatchFlatList = () => {
         item.Organization.name.toLowerCase().includes(searchInput.toLowerCase())
       );
     });
+  };
+
+  // handle Navigate
+  const handleNavigate = (batch: string) => {
+    setSelectedBatch(batch);
+    router.push("/students/batchAssignments");
   };
   return (
     <>
@@ -80,7 +90,7 @@ const BatchFlatList = () => {
                 </Text>
               </Text>
             </View>
-            <Pressable className="absolute right-5">
+            <Pressable className="absolute right-5" onPress={() => handleNavigate(item._id)}>
               <Ionicons name="arrow-forward-circle" size={30} color="white" />
             </Pressable>
           </View>

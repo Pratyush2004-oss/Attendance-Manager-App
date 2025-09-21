@@ -18,7 +18,7 @@ interface AssignmentStoreInterface {
     input: CreateAssignmentInputType,
     token: string
   ) => Promise<boolean>;
-  getBatchAssignment: (batchId: string, token: string) => Promise<void>;
+  getBatchAssignment: (token: string) => Promise<void>;
   getTodaysAssignment: (token: string) => Promise<void>;
   resetAssignmentRecord: () => void;
 }
