@@ -191,13 +191,14 @@ export const loginUser = expressAsyncHandler(async (req, res, next) => {
         if (!user) {
             return res.status(400).json({ error: "User not found" });
         }
+        // checking if the user is verified or not
+        if (!user.isVerified) {
+            return res.status(400).json({ error: "User is not verified, first verify the user" });
+        }
         // checking password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ error: "Invalid credentials" });
-        }
-        if (!user.isVerified) {
-            return res.status(400).json({ error: "User is not verified, first verify the user" });
         }
 
         const userDetail = {
