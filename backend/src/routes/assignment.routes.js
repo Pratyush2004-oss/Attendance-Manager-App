@@ -5,7 +5,7 @@ import { upload } from '../middleware/multer.middleware.js';
 
 const router = express.Router();
 
-router.post("/create-assignment", AuthMiddleware, VerifyTeacher, upload.array('files', 2), createAssignment);
+router.post("/create-assignment", AuthMiddleware, VerifyTeacher, upload.array('files'), createAssignment);
 router.get("/get-assignment/:batchId", AuthMiddleware, VerifyStudent, getAssignment);
 router.delete('/delete-assignment/:assignmentId', AuthMiddleware, VerifyTeacher, deleteAssignment);
 router.get("/get-assignments-of-today", AuthMiddleware, VerifyStudent, getAllAssignmentsofToday);
