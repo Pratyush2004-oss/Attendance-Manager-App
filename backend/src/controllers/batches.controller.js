@@ -220,7 +220,7 @@ export const leaveBatch = expressasyncHandler(async (req, res, next) => {
         await AttendanceModel.updateMany(
             {
                 batchId: batchId,
-                "records.studentId": studentId
+                "records.studentId": user._id
             },
             { $pull: { records: { studentId: user._id } } }
         );

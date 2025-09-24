@@ -56,7 +56,7 @@ export const createAssignment = expressasyncHandler(async (req, res, next) => {
             // For 'raw' files, the public_id MUST include the file extension.
             // We simply use the full originalname provided by Multer.
             const publicId = file.originalname;
-            
+
             return new Promise((resolve, reject) => {
                 const cld_upload_stream = cloudinary.uploader.upload_stream({
                     resource_type: resourceType,
@@ -65,7 +65,8 @@ export const createAssignment = expressasyncHandler(async (req, res, next) => {
                     public_id: publicId,
                     // This prevents files with the same name from overwriting each other.
                     // Cloudinary will add a random suffix if a file with this name already exists.
-                    overwrite: false
+                    overwrite: false,
+                    access_mode: "public",
                 }, (error, result) => {
                     if (error) {
                         console.error('Cloudinary Upload Error:', error);
