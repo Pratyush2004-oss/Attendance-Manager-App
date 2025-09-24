@@ -107,7 +107,7 @@ const AttendanceList = () => {
             >
               <Ionicons name="calendar-outline" size={16} color="white" />
               <Text className="text-lg font-normal text-white">
-                {input.date.toISOString().split("T")[0]}
+                {input.date.toDateString()}
               </Text>
             </TouchableOpacity>
             {showDatePicker && (

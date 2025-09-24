@@ -31,6 +31,7 @@ interface BatchStoreInterface {
     input: removeStudentFromBatchInputType,
     token: string
   ) => Promise<boolean>;
+  leaveBatch: (batchId: string, token: string) => Promise<boolean>;
   joinBatch: (input: JoinBatchInputType, token: string) => Promise<boolean>;
   resetBatchRecords: () => void;
 }
@@ -162,7 +163,7 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
       return false;
     }
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         batchApis.delete_Student_from_Batch,
         input,
         {
@@ -172,18 +173,13 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
         }
       );
       if (response.status === 400) throw new Error(response.data.error);
-      Alert.alert("Success", response.data.message, [
-        {
-          text: "OK",
-          onPress: () => {
-            get().getBatchStudents(input.batchId, token);
-            return true;
-          },
-        },
-      ]);
-      return false;
+      Alert.alert("Success", response.data.message);
+      get().getBatchStudents(input.batchId, token);
+      return true;
     } catch (error: any) {
+      console.log(error.response.data);
       if (error.isAxiosError) Alert.alert("Error", error.response.data.error);
+      else Alert.alert("Error", error.message);
       return false;
     }
   },
@@ -200,18 +196,44 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
         },
       });
       if (response.status === 400) throw new Error(response.data.error);
+      Alert.alert("Success", response.data.message);
+      get().getBatchListForStudent(token);
+      return true;
+    } catch (error: any) {
+      if (error.isAxiosError) Alert.alert("Error", error.response.data.error);
+      return false;
+    }
+  },
+  // leave batch
+  leaveBatch: async (batchId, token) => {
+    if (!token || !batchId) {
+      Alert.alert("Error", "Please fill all the fields.");
+      return false;
+    }
+    try {
+      const response = await axios.put(
+        batchApis.leaveBatch,
+        { batchId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 400) throw new Error(response.data.error);
       Alert.alert("Success", response.data.message, [
         {
           text: "OK",
           onPress: () => {
             get().getBatchListForStudent(token);
-            return true;
           },
         },
       ]);
-      return false;
+      return true;
     } catch (error: any) {
+      console.log(error.response.data);
       if (error.isAxiosError) Alert.alert("Error", error.response.data.error);
+      else Alert.alert("Error", error.message);
       return false;
     }
   },

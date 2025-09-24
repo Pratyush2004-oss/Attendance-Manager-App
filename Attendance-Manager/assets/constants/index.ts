@@ -24,6 +24,7 @@ export const batchApis = {
   get_batches_for_Student: `${BASE_URL}/api/batch/get-batches-for-student`,
   get_Single_Batch_for_Student: `${BASE_URL}/api/batch/get-batch-By-id-for-students/:batchId`,
   get_All_Batches_of_Organization: `${BASE_URL}/api/batch/get-all-batches-of-organization`,
+  leaveBatch: `${BASE_URL}/api/batch/leave-batch`,
 };
 
 export const OrganizationApis = {
@@ -66,21 +67,6 @@ export const NavigationOptions = [
     ],
   },
   {
-    category: "Organization",
-    options: [
-      {
-        title: "All Organizations",
-        href: "/organizations",
-        icon: "people-circle-outline",
-      },
-      {
-        title: "Your Organizations",
-        href: "/organizations",
-        icon: "people-circle-outline",
-      },
-    ],
-  },
-  {
     category: "Assignments",
     options: [
       {
@@ -111,6 +97,54 @@ export const NavigationOptions = [
       {
         title: "Attendance Stats",
         href: "/attendance",
+        icon: "calendar",
+      },
+    ],
+  },
+];
+
+export const NavigationOptionsForTeachers = [
+  {
+    category: "Batches",
+    options: [
+      {
+        title: "All Batches",
+        href: "/batches",
+        icon: "bar-chart-outline",
+      },
+      {
+        title: "Your Batches",
+        href: "/batches",
+        icon: "bar-chart",
+      },
+    ],
+  },
+  {
+    category: "Assignments",
+    options: [
+      {
+        title: "Create Assignments",
+        href: "/assignments",
+        icon: "book-outline",
+      },
+      {
+        title: "Today's Assignments",
+        href: "/assignments",
+        icon: "book-outline",
+      },
+    ],
+  },
+  {
+    category: "Attendance",
+    options: [
+      {
+        title: "Mark Attendance",
+        href: "/batches",
+        icon: "calendar",
+      },
+      {
+        title: "Get Attendance Stats",
+        href: "/teacher/getAttendance",
         icon: "calendar",
       },
     ],

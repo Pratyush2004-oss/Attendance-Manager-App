@@ -42,7 +42,7 @@ export default function OtpVerification({ onOtpChange }: OtpVerificationProps) {
               inputRefs.current[index] = ref;
             }
           }}
-          className="w-12 px-3 py-2 text-xl text-center bg-white rounded-md"
+          className="px-3 py-2 text-xl text-center bg-white rounded-md size-12"
           maxLength={1}
           value={otp}
           onChangeText={(text) => handleInputChange(index, text)}

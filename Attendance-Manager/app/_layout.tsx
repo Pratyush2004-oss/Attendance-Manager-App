@@ -25,7 +25,6 @@ export default function RootLayout() {
       <SafeScreen>
         <ProtectedRoute>
           <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
             <Stack.Screen name="(auth)" />
           </Stack>
         </ProtectedRoute>

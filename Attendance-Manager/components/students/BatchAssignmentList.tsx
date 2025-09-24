@@ -1,10 +1,39 @@
-import { View, Text, FlatList, Image } from "react-native";
+import { View, Text, FlatList, Image, Pressable, Alert } from "react-native";
 import React from "react";
 import { useAssignmentStore } from "@/store/assignment.store";
 import { Ionicons } from "@expo/vector-icons";
 import BackHeader from "../shared/BackHeader";
+import { useBatchStore } from "@/store/batch.store";
+import { useUserStore } from "@/store/userStore";
+import { useRouter } from "expo-router";
 
 const BatchAssignmentList = () => {
+  const { leaveBatch } = useBatchStore();
+  const { token } = useUserStore();
+  const { selectedBatch } = useAssignmentStore();
+  const router = useRouter();
+  const handleLeaveBatch = async () => {
+    Alert.alert(
+      "Leave Batch",
+      "If you leave the batch, your attendance records will be deleted. Are You sure you want to leave?",
+      [
+        {
+          text: "No",
+          onPress: () => {},
+        },
+        {
+          text: "Yes",
+          onPress: async () => {
+            // leave batch
+            const res = await leaveBatch(selectedBatch, token as string);
+            if (res) {
+              router.push("/(studentTab)/batches");
+            }
+          },
+        },
+      ]
+    );
+  };
   const { batchAssignment } = useAssignmentStore();
   return (
     <View>
@@ -13,8 +42,14 @@ const BatchAssignmentList = () => {
         contentContainerStyle={{ paddingBottom: 100 }}
         data={batchAssignment}
         ListHeaderComponent={() => (
-          <View className="px-5 my-3">
+          <View className="flex-row items-center justify-between px-5 my-3">
             <Text className="text-3xl font-bold">Batch Assignments</Text>
+            <Pressable
+              className="p-1 bg-red-500 rounded-xl"
+              onPress={handleLeaveBatch}
+            >
+              <Ionicons name="exit-outline" size={25} color="white" />
+            </Pressable>
           </View>
         )}
         renderItem={({ item }) => (
@@ -31,8 +66,9 @@ const BatchAssignmentList = () => {
                   {item.endsWith("jpg") ||
                   item.endsWith("png") ||
                   item.endsWith("jpeg") ? (
-                    <Image source={{ uri: item }}
-                    className="size-32 rounded-xl"
+                    <Image
+                      source={{ uri: item }}
+                      className="size-32 rounded-xl"
                     />
                   ) : (
                     <Ionicons

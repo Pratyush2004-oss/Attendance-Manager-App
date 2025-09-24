@@ -39,6 +39,7 @@ const BatchModal = ({
     try {
       setisLoading(true);
       const res = await joinBatch(input, token as string);
+      console.log(res);
       if (res) {
         setInput({ batchId: "", batchJoiningCode: "" });
         router.replace("/(studentTab)/batches");

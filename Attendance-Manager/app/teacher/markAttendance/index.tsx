@@ -1,6 +1,6 @@
-import { View, Text } from "react-native";
-import React from "react";
 import MarkAttendance from "@/components/teachers/MarkAttendance";
+import React from "react";
+import { View } from "react-native";
 
 const MarkAttendancePage = () => {
   return (

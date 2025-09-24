@@ -2,7 +2,7 @@ import BatchAssignmentList from "@/components/students/BatchAssignmentList";
 import { useAssignmentStore } from "@/store/assignment.store";
 import { useUserStore } from "@/store/userStore";
 import React, { useEffect } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 const BatchAssignmentPage = () => {
   const { selectedBatch, getBatchAssignment } = useAssignmentStore();

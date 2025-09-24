@@ -1,18 +1,39 @@
 import { useBatchStore } from "@/store/batch.store";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import {
-  FlatList,
-  Image,
-  Text,
-  Pressable,
-  View,
-} from "react-native";
+import { Alert, FlatList, Image, Pressable, Text, View } from "react-native";
 import AddToBatchModal from "./AddToBatchModal";
+import { removeStudentFromBatchInputType } from "@/types";
+import { useUserStore } from "@/store/userStore";
 
 const BatchStudentList = () => {
   const [showModal, setshowModal] = useState(false);
-  const { selectedBatch, batchStudentList } = useBatchStore();
+  const { selectedBatch, batchStudentList, removeStudentFromBatch } =
+    useBatchStore();
+  const { token } = useUserStore();
+  const [input, setinput] = useState<removeStudentFromBatchInputType>({
+    studentId: "",
+    batchId: selectedBatch?._id || "",
+  });
+
+  const removeStudentFromBatchhandler = () => {
+    Alert.alert(
+      "Remove Student",
+      "All the records of the students will be deleted, Are you sure you want to remove?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => {},
+        },
+        {
+          text: "YES",
+          onPress: async () => {
+            await removeStudentFromBatch(input, token as string);
+          },
+        },
+      ]
+    );
+  };
   return (
     selectedBatch && (
       <>
@@ -49,12 +70,40 @@ const BatchStudentList = () => {
           )}
           renderItem={({ item }) => (
             <View className="relative flex-row items-center gap-3 p-2 mx-1 my-2 bg-blue-500/70 rounded-xl">
+              {/* Dropdown Menu only for the selected Student */}
+              {input.studentId === item._id && (
+                <Pressable
+                  className="absolute z-10 items-start p-3 bg-white rounded-full right-5"
+                  onPress={removeStudentFromBatchhandler}
+                >
+                  <Text>Remove</Text>
+                </Pressable>
+              )}
               <Image
                 source={require("@/assets/images/student.jpeg")}
                 className="rounded-full size-32 aspect-square"
               />
-              <Pressable className="absolute p-2 right-2 top-2">
-                <FontAwesome name="ellipsis-v" size={20} color="white" />
+              <Pressable
+                className="absolute z-20 p-2 right-2 top-2"
+                onPress={() => {
+                  if (input.studentId !== item._id)
+                    setinput({ ...input, studentId: item._id });
+                  else setinput({ ...input, studentId: "" });
+                }}
+              >
+                {input.studentId === item._id ? (
+                  <Ionicons
+                    name="close-circle-outline"
+                    size={20}
+                    color="white"
+                  />
+                ) : (
+                  <Ionicons
+                    name="ellipsis-vertical-outline"
+                    size={20}
+                    color="white"
+                  />
+                )}
               </Pressable>
               <View className="w-full">
                 <Text className="text-xl font-bold text-white">

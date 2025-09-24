@@ -15,7 +15,7 @@ import {
 
 const { width } = Dimensions.get("screen");
 
-export default function Sidebar({
+export default function StudentsSidebar({
   visible,
   onClose,
 }: {
@@ -191,9 +191,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     width: width * 0.8,
-    height: "100%",
-    borderTopRightRadius: 20,
-    borderBottomEndRadius: 20,
+    height: "88%",
     backgroundColor: "#1DA1F2",
     zIndex: 200,
     paddingTop: 30, // FIX: Increased padding for the close button
