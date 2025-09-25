@@ -1,5 +1,5 @@
 import AuthHeader from "@/components/auth/AuthHeader";
-import ForgotPasswordModal from "@/components/ForgotPasswordModal";
+import ForgotPasswordModal from "@/components/auth/ForgotPasswordModal";
 import { useUserStore } from "@/store/userStore";
 import { resetPasswordInputType } from "@/types";
 import React, { useState } from "react";

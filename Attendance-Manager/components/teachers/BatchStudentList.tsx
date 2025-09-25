@@ -93,7 +93,7 @@ const BatchStudentList = () => {
               >
                 {input.studentId === item._id ? (
                   <Ionicons
-                    name="close-circle-outline"
+                    name="ellipsis-horizontal-outline"
                     size={20}
                     color="white"
                   />

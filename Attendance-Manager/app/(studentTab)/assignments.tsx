@@ -1,8 +1,8 @@
-import { View, Text } from "react-native";
-import React, { useEffect } from "react";
+import AssignmentList from "@/components/students/AssignmentList";
 import { useAssignmentStore } from "@/store/assignment.store";
 import { useUserStore } from "@/store/userStore";
-import AssignmentList from "@/components/students/AssignmentList";
+import React, { useEffect } from "react";
+import { View } from "react-native";
 
 const Assignments = () => {
   const { getTodaysAssignment } = useAssignmentStore();

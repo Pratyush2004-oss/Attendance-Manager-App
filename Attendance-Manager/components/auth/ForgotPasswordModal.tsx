@@ -3,14 +3,8 @@ import { resetPasswordInputType } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import {
-  Modal,
-  Pressable,
-  Text,
-  TextInput,
-  View
-} from "react-native";
-import OtpVerification from "./auth/OtpVerification";
+import { Modal, Pressable, Text, TextInput, View } from "react-native";
+import OtpVerification from "./OtpVerification";
 
 const ForgotPasswordModal = ({
   input,
