@@ -57,7 +57,10 @@ const BatchFlatList = () => {
         )}
         ListEmptyComponent={() => (
           <View className="items-center justify-center flex-1 my-auto h-96">
-            <Pressable className="w-5/6 p-3 bg-blue-500 rounded-xl">
+            <Pressable
+              className="w-5/6 p-3 bg-blue-500 rounded-xl"
+              onPress={() => router.push("/students/batches")}
+            >
               <Text className="text-2xl font-medium text-center text-white">
                 Join Batches
               </Text>
@@ -90,7 +93,10 @@ const BatchFlatList = () => {
                 </Text>
               </Text>
             </View>
-            <Pressable className="absolute right-5" onPress={() => handleNavigate(item._id)}>
+            <Pressable
+              className="absolute right-5"
+              onPress={() => handleNavigate(item._id)}
+            >
               <Ionicons name="arrow-forward-circle" size={30} color="white" />
             </Pressable>
           </View>
