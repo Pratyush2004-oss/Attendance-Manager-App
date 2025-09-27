@@ -1,5 +1,6 @@
 export const BASE_URL = "https://attendance-manager-app-seven.vercel.app";
 
+// user apis
 export const UserApis = {
   registerUser: `${BASE_URL}/api/auth/register`,
   loginUser: `${BASE_URL}/api/auth/login`,
@@ -9,6 +10,7 @@ export const UserApis = {
   resetPassword: `${BASE_URL}/api/auth/reset-password`,
 };
 
+// batch apis
 export const batchApis = {
   // teacher apis
   getAllStudentList: `${BASE_URL}/api/batch/get-student-list/:batchId`,
@@ -27,6 +29,7 @@ export const batchApis = {
   leaveBatch: `${BASE_URL}/api/batch/leave-batch`,
 };
 
+// organization apis
 export const OrganizationApis = {
   getOrganizationList: `${BASE_URL}/api/organization/get-organization-list`,
   verifyTeacher: `${BASE_URL}/api/organization/verify-teachers`,
@@ -36,6 +39,7 @@ export const OrganizationApis = {
   deleteTeacher: `${BASE_URL}/api/organization/delete-teaher-account/:teacherId`,
 };
 
+// attendance routes
 export const AttendanceApis = {
   markAttendace: `${BASE_URL}/api/attendance/mark-attendance`,
   getAttendanceForStudents: `${BASE_URL}/api/attendance/get-attendance-for-student/:month`,
@@ -50,6 +54,7 @@ export const AssignmentApis = {
   getBatchAssignment: `${BASE_URL}/api/assignment/get-assignment/:batchId`,
 };
 
+// navigation options for students
 export const NavigationOptions = [
   {
     category: "Batches",
@@ -103,6 +108,7 @@ export const NavigationOptions = [
   },
 ];
 
+// navigation options for teachers
 export const NavigationOptionsForTeachers = [
   {
     category: "Batches",
@@ -151,6 +157,7 @@ export const NavigationOptionsForTeachers = [
   },
 ];
 
+// attendance constants
 export const AttendanceMonth = [
   {
     name: "January",
@@ -202,4 +209,5 @@ export const AttendanceMonth = [
   },
 ];
 
+// attendance constants
 export const AttendanceYear = ["2024", "2025", "2026"];
