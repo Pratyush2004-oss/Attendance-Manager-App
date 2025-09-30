@@ -10,6 +10,7 @@ export const UserApis = {
   resetPassword: `${BASE_URL}/api/auth/reset-password`,
 };
 
+
 // batch apis
 export const batchApis = {
   // teacher apis
