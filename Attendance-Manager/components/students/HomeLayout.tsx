@@ -176,4 +176,3 @@ const HomeLayout = () => {
 };
 
 export default HomeLayout;
-// ...existing code...
