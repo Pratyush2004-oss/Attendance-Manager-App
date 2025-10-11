@@ -20,7 +20,10 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+// ...existing code...
+import { LinearGradient } from "expo-linear-gradient";
 
+// replace top-level wrapper View with LinearGradient and use LinearGradient for OptionCard background
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = Math.min(400, width * 0.72);
 
@@ -43,7 +46,6 @@ const OptionCard = ({ item, index }: any) => {
     <AnimatedPressable
       entering={FadeInUp.duration(450).delay(index * 80)}
       style={aStyle as any}
-      className="items-center w-[11.5rem] p-4 mr-3 shadow-lg bg-gradient-to-br from-blue-500/80 to-indigo-600/85 rounded-xl"
       onPressIn={() => {
         scale.value = withSpring(0.96, { damping: 12, stiffness: 120 });
       }}
@@ -53,17 +55,30 @@ const OptionCard = ({ item, index }: any) => {
       onPress={() => {
         router.push(item.href as any);
       }}
+      className="mr-3"
     >
-      <View className="p-3.5 border border-white/20 rounded-full bg-white/10">
-        <Ionicons
-          name={item.icon as keyof typeof Ionicons.glyphMap}
-          size={item.icon.includes("people") || item.icon.includes("bar") ? 40 : 45}
-          color="white"
-        />
-      </View>
-      <Text className="mt-3 font-medium text-center text-white text-wrap">
-        {item.title}
-      </Text>
+      <LinearGradient
+        colors={["#2563eb", "#7c3aed"]} // blue -> indigo
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        className="items-center w-[11.5rem] p-4 rounded-xl shadow-lg"
+        style={{borderRadius: 20}}
+      >
+        <View className="p-3.5 border border-white/20 rounded-full bg-white/10">
+          <Ionicons
+            name={item.icon as keyof typeof Ionicons.glyphMap}
+            size={
+              item.icon.includes("people") || item.icon.includes("bar")
+                ? 40
+                : 45
+            }
+            color="white"
+          />
+        </View>
+        <Text className="mt-3 font-medium text-center text-white text-wrap">
+          {item.title}
+        </Text>
+      </LinearGradient>
     </AnimatedPressable>
   );
 };
@@ -85,7 +100,9 @@ const SearchBar = () => {
   const focusAnim = useSharedValue(0);
   const animatedStyle = useAnimatedStyle(() => ({
     shadowOpacity: focusAnim.value,
-    borderColor: focusAnim.value ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.15)",
+    borderColor: focusAnim.value
+      ? "rgba(255,255,255,0.9)"
+      : "rgba(255,255,255,0.15)",
   }));
 
   return (
@@ -111,7 +128,10 @@ const SearchBar = () => {
 const HomeLayout = () => {
   const router = useRouter();
   const headerAnim = useSharedValue(0);
-  headerAnim.value = withDelay(120, withTiming(1, { duration: 600, easing: Easing.out(Easing.quad) }));
+  headerAnim.value = withDelay(
+    120,
+    withTiming(1, { duration: 600, easing: Easing.out(Easing.quad) })
+  );
 
   const headerStyle = useAnimatedStyle(() => ({
     opacity: headerAnim.value,
@@ -120,57 +140,68 @@ const HomeLayout = () => {
 
   return (
     <View className="flex-1 bg-blue-500/12">
-      {/* Top hero */}
-      <Animated.View style={headerStyle as any} className="px-4 pt-8 pb-4">
-        <View className="flex-row items-center justify-between mb-3">
-          <View>
-            <Text className="text-2xl font-extrabold text-white">Good Morning</Text>
-            <Text className="text-sm text-white/80">Welcome back to Attendance Manager</Text>
-          </View>
-          <Pressable
-            onPress={() => router.push("/profile" as any)}
-            className="items-center justify-center w-12 h-12 rounded-full bg-white/10"
-          >
-            <Text className="font-bold text-white">A</Text>
-          </Pressable>
-        </View>
-
-        <SearchBar />
-      </Animated.View>
-
-      {/* Main list */}
-      <FlatList
-        data={NavigationOptions}
-        className="px-4"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 40 }}
-        keyExtractor={(item) => item.category}
-        renderItem={({ item, index }) => (
-          <Animated.View
-            entering={FadeInUp.duration(450).delay(index * 120)}
-            className="mb-6"
-          >
-            <View className="px-4 py-3 border border-white/10 rounded-2xl bg-white/4">
-              <SectionHeader title={item.category} />
-
-              <FlatList
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={item.options}
-                contentContainerStyle={{ paddingVertical: 4 }}
-                keyExtractor={(opt) => opt.title}
-                renderItem={({ item: opt, index: optIndex }) => (
-                  <OptionCard item={opt} index={optIndex} />
-                )}
-                ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
-                snapToInterval={CARD_WIDTH + 12}
-                decelerationRate="fast"
-                pagingEnabled={false}
-              />
+      <LinearGradient
+        colors={["#0f172a", "#0b1220"]} // subtle dark gradient background
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        className="flex-1"
+      >
+        {/* Top hero */}
+        <Animated.View style={headerStyle as any} className="px-4 pt-8 pb-4">
+          <View className="flex-row items-center justify-between mb-3">
+            <View>
+              <Text className="text-2xl font-extrabold text-white">
+                Good Morning
+              </Text>
+              <Text className="text-sm text-white/80">
+                Welcome back to Attendance Manager
+              </Text>
             </View>
-          </Animated.View>
-        )}
-      />
+            <Pressable
+              onPress={() => router.push("/profile" as any)}
+              className="items-center justify-center w-12 h-12 rounded-full bg-white/10"
+            >
+              <Text className="font-bold text-white">A</Text>
+            </Pressable>
+          </View>
+
+          <SearchBar />
+        </Animated.View>
+
+        {/* Main list */}
+        <FlatList
+          data={NavigationOptions}
+          className="px-4"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 40 }}
+          keyExtractor={(item) => item.category}
+          renderItem={({ item, index }) => (
+            <Animated.View
+              entering={FadeInUp.duration(450).delay(index * 120)}
+              className="mb-6"
+            >
+              <View className="px-4 py-3 border border-white/10 rounded-2xl bg-white/4">
+                <SectionHeader title={item.category} />
+
+                <FlatList
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  data={item.options}
+                  contentContainerStyle={{ paddingVertical: 4 }}
+                  keyExtractor={(opt) => opt.title}
+                  renderItem={({ item: opt, index: optIndex }) => (
+                    <OptionCard item={opt} index={optIndex} />
+                  )}
+                  ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
+                  snapToInterval={CARD_WIDTH + 12}
+                  decelerationRate="fast"
+                  pagingEnabled={false}
+                />
+              </View>
+            </Animated.View>
+          )}
+        />
+      </LinearGradient>
     </View>
   );
 };

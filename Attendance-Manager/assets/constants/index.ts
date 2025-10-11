@@ -86,7 +86,7 @@ export const NavigationOptions = [
         icon: "book-outline",
       },
       {
-        title: "Today's Assignments",
+        title: "Assignment Stats",
         href: "/assignments",
         icon: "book-outline",
       },
