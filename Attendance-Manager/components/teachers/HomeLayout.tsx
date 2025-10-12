@@ -27,6 +27,7 @@ const CARD_WIDTH = Math.min(400, width * 0.72);
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
+// Option Card
 const OptionCard = ({ item, index }: any) => {
   const router = useRouter();
   const scale = useSharedValue(1);
@@ -89,6 +90,7 @@ const OptionCard = ({ item, index }: any) => {
   );
 };
 
+// section Header
 const SectionHeader = ({ title }: { title: string }) => {
   const anim = useSharedValue(0);
   anim.value = withDelay(60, withTiming(1, { duration: 450 }));
