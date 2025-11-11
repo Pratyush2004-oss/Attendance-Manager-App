@@ -62,7 +62,7 @@ const OptionCard = ({ item, index }: any) => {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         className="items-center w-[11.5rem] p-4 rounded-xl shadow-lg"
-        style={{borderRadius: 20}}
+        style={{ borderRadius: 20 }}
       >
         <View className="p-3.5 border border-white/20 rounded-full bg-white/10">
           <Ionicons
@@ -141,7 +141,7 @@ const HomeLayout = () => {
   return (
     <View className="flex-1 bg-blue-500/12">
       <LinearGradient
-        colors={["#0f172a", "#0b1220"]} // subtle dark gradient background
+        colors={["#ffffff", "#60a5fa", "#f8fafc"]} // subtle light background
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         className="flex-1"

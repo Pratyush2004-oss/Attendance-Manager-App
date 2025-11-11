@@ -53,6 +53,7 @@ export async function sendVerificationEmail(recipientEmail, recipientName, verif
       message: "Email sent successfully"
     };
   } catch (error) {
+    console.log(error)
     return {
       success: false,
       message: "Failed to send email"

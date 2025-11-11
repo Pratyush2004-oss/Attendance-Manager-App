@@ -62,10 +62,10 @@ const OptionCard = ({ item, index }: any) => {
         });
       }}
       onPress={() => router.push(item.href as any)}
-      className="mr-3"
+      className="mr-1.5"
     >
       <LinearGradient
-        colors={["#2563eb", "#f8fafc"]} // light card gradient
+        colors={["#60a5fa", "#f8fafc"]} // light card gradient
         start={{ x: 1, y: 1 }}
         end={{ x: 0, y: 0 }}
         className="items-center w-[11.5rem] p-4 rounded-xl shadow"
@@ -79,7 +79,7 @@ const OptionCard = ({ item, index }: any) => {
           <Ionicons
             name={item.icon as keyof typeof Ionicons.glyphMap}
             size={44}
-            color="#2563eb" // primary blue icon
+            color="#60a5fa" // primary blue icon
           />
         </View>
         <Text className="mt-3 font-semibold text-center text-gray-100">
@@ -147,9 +147,9 @@ const HomeLayout = () => {
 
   return (
     <LinearGradient
-      colors={["#ffffff", "#f8fafc"]} // subtle light background
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
+      colors={["#ffffff", "#60a5fa", "#f8fafc"]} // subtle light background
+      end={{ x: 0, y: 0 }}
+      start={{ x: 1, y: 1 }}
       className="flex-1"
     >
       <FlatList
